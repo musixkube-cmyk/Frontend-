@@ -228,13 +228,17 @@ export default function Home() {
           <a href="/terms" className="transition-colors hover:text-ink-foreground">Terms</a>
           <a href="/privacy" className="transition-colors hover:text-ink-foreground">Privacy</a>
           <a href="/cookies" className="transition-colors hover:text-ink-foreground">Cookies</a>
+          <a href="/dmca" className="transition-colors hover:text-ink-foreground">DMCA</a>
           <a href="/careers" className="transition-colors hover:text-ink-foreground">Careers</a>
           <a href="/ads-business" className="transition-colors hover:text-ink-foreground">Ads & Business</a>
+          <a href="/labels" className="transition-colors hover:text-ink-foreground">Labels</a>
+          <a href="/creators" className="transition-colors hover:text-ink-foreground">Creators</a>
+          <a href="/distributors" className="transition-colors hover:text-ink-foreground">Distributors</a>
+          <a href="/sync" className="transition-colors hover:text-ink-foreground">Sync</a>
           <a href="/developers" className="transition-colors hover:text-ink-foreground">Developers</a>
           <a href="/news" className="transition-colors hover:text-ink-foreground">News</a>
           <a href="/us-tida" className="transition-colors hover:text-ink-foreground">US TIDA</a>
           <a href="/accessibility" className="transition-colors hover:text-ink-foreground">Accessibility</a>
-          <a href="/help-center" className="transition-colors hover:text-ink-foreground">Help Center</a>
         </nav>
         <p className="mt-3 text-xs text-ink-muted">&copy; {new Date().getFullYear()} Musicosy</p>
       </footer>
