@@ -77,8 +77,18 @@ export default function Home() {
 
   return (
     <div className="relative flex min-h-screen flex-col bg-ink text-ink-foreground">
-      {/* Full-bleed background */}
-      <div className="fixed inset-0 -z-10 bg-ink">
+      {/* Full-bleed background video */}
+      <div className="fixed inset-0 -z-10">
+        <video
+          className="h-full w-full object-cover"
+          src="/astronaut.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden="true"
+        />
+        <div className="absolute inset-0 bg-ink/70" />
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/50 to-ink/20" />
       </div>
 
