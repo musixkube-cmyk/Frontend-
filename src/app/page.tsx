@@ -246,13 +246,15 @@ export default function Home() {
               <a href="/us-tida" className="transition-colors hover:text-ink-foreground">US TIDA</a>
               <a href="/accessibility" className="transition-colors hover:text-ink-foreground">Accessibility</a>
             </nav>
-            <p className="mt-3 text-xs text-ink-muted">&copy; {new Date().getFullYear()} Musicosy</p>
           </div>
-          <img
-            src="/musicosy-orange-logo.webp"
-            alt="Musicosy"
-            className="h-16 w-auto shrink-0 object-contain"
-          />
+          <div className="flex shrink-0 flex-col items-end pr-4">
+            <img
+              src="/musicosy-orange-logo.webp"
+              alt="Musicosy"
+              className="h-16 w-auto object-contain"
+            />
+            <p className="mt-1 text-xs text-ink-muted">&copy; {new Date().getFullYear()} Musicosy</p>
+          </div>
         </div>
       </footer>
     </div>
