@@ -224,32 +224,36 @@ export default function Home() {
 
       {/* Bottom rail */}
       <footer className="mt-auto border-t border-ink-foreground/10 px-5 py-6 sm:px-10 lg:pl-32">
-        <img
-          src="/logo-full-same-row.png"
-          alt="Musicosy"
-          className="mb-4 h-7 w-auto object-contain brightness-0 invert"
-        />
-        <nav aria-label="Bottom rail" className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-ink-muted">
-          <a href="/about" className="transition-colors hover:text-ink-foreground">About</a>
-          <a href="/get-app" className="transition-colors hover:text-ink-foreground">Get App</a>
-          <a href="/help" className="transition-colors hover:text-ink-foreground">Help</a>
-          <a href="/terms" className="transition-colors hover:text-ink-foreground">Terms</a>
-          <a href="/privacy" className="transition-colors hover:text-ink-foreground">Privacy</a>
-          <a href="/cookies" className="transition-colors hover:text-ink-foreground">Cookies</a>
-          <a href="/dmca" className="transition-colors hover:text-ink-foreground">DMCA</a>
-          <a href="/careers" className="transition-colors hover:text-ink-foreground">Careers</a>
-          <a href="/advertise" className="transition-colors hover:text-ink-foreground">Advertise</a>
-          <a href="/ads-business" className="transition-colors hover:text-ink-foreground">Ads & Business</a>
-          <a href="/labels" className="transition-colors hover:text-ink-foreground">Labels</a>
-          <a href="/creators" className="transition-colors hover:text-ink-foreground">Creators</a>
-          <a href="/distributors" className="transition-colors hover:text-ink-foreground">Distributors</a>
-          <a href="/sync" className="transition-colors hover:text-ink-foreground">Sync</a>
-          <a href="/developers" className="transition-colors hover:text-ink-foreground">Developers</a>
-          <a href="/news" className="transition-colors hover:text-ink-foreground">News</a>
-          <a href="/us-tida" className="transition-colors hover:text-ink-foreground">US TIDA</a>
-          <a href="/accessibility" className="transition-colors hover:text-ink-foreground">Accessibility</a>
-        </nav>
-        <p className="mt-3 text-xs text-ink-muted">&copy; {new Date().getFullYear()} Musicosy</p>
+        <div className="flex items-start justify-between gap-6">
+          <div>
+            <nav aria-label="Bottom rail" className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-ink-muted">
+              <a href="/about" className="transition-colors hover:text-ink-foreground">About</a>
+              <a href="/get-app" className="transition-colors hover:text-ink-foreground">Get App</a>
+              <a href="/help" className="transition-colors hover:text-ink-foreground">Help</a>
+              <a href="/terms" className="transition-colors hover:text-ink-foreground">Terms</a>
+              <a href="/privacy" className="transition-colors hover:text-ink-foreground">Privacy</a>
+              <a href="/cookies" className="transition-colors hover:text-ink-foreground">Cookies</a>
+              <a href="/dmca" className="transition-colors hover:text-ink-foreground">DMCA</a>
+              <a href="/careers" className="transition-colors hover:text-ink-foreground">Careers</a>
+              <a href="/advertise" className="transition-colors hover:text-ink-foreground">Advertise</a>
+              <a href="/ads-business" className="transition-colors hover:text-ink-foreground">Ads & Business</a>
+              <a href="/labels" className="transition-colors hover:text-ink-foreground">Labels</a>
+              <a href="/creators" className="transition-colors hover:text-ink-foreground">Creators</a>
+              <a href="/distributors" className="transition-colors hover:text-ink-foreground">Distributors</a>
+              <a href="/sync" className="transition-colors hover:text-ink-foreground">Sync</a>
+              <a href="/developers" className="transition-colors hover:text-ink-foreground">Developers</a>
+              <a href="/news" className="transition-colors hover:text-ink-foreground">News</a>
+              <a href="/us-tida" className="transition-colors hover:text-ink-foreground">US TIDA</a>
+              <a href="/accessibility" className="transition-colors hover:text-ink-foreground">Accessibility</a>
+            </nav>
+            <p className="mt-3 text-xs text-ink-muted">&copy; {new Date().getFullYear()} Musicosy</p>
+          </div>
+          <img
+            src="/musicosy-orange-logo.webp"
+            alt="Musicosy"
+            className="h-8 w-auto shrink-0 object-contain"
+          />
+        </div>
       </footer>
     </div>
   );
