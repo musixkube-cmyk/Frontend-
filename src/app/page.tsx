@@ -251,7 +251,7 @@ export default function Home() {
           <img
             src="/musicosy-orange-logo.webp"
             alt="Musicosy"
-            className="h-8 w-auto shrink-0 object-contain"
+            className="h-16 w-auto shrink-0 object-contain"
           />
         </div>
       </footer>
