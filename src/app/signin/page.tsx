@@ -11,14 +11,13 @@ export default function SignInPage() {
   const [phone, setPhone] = useState("");
   const [showPhone, setShowPhone] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [emailSubmitted, setEmailSubmitted] = useState(false);
 
   return (
-    <main className="light min-h-screen bg-background">
+    <main className="min-h-screen bg-white text-neutral-900">
       <div className="px-6 pt-8 md:px-12">
         <Link
           href="/"
-          className="font-display text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground"
+          className="font-display text-xs uppercase tracking-[0.3em] text-neutral-500 transition-colors hover:text-neutral-900"
         >
           &larr; Back
         </Link>
@@ -39,7 +38,7 @@ export default function SignInPage() {
           <button
             type="button"
             onClick={() => setShowPhone(!showPhone)}
-            className="flex h-14 w-full items-center justify-center gap-3 rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            className="flex h-14 w-full items-center justify-center gap-3 rounded-full bg-neutral-900 font-medium text-white transition-opacity hover:opacity-90"
           >
             <PhoneIcon /> Continue with phone
           </button>
@@ -56,13 +55,13 @@ export default function SignInPage() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="+1 (555) 000-0000"
-              className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
+              className="h-14 w-full rounded-xl border border-neutral-200 bg-white px-4 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none"
             />
             <button
               type="button"
               disabled={!phone.trim()}
               onClick={() => router.push("/dashboard")}
-              className={`mt-2 flex h-12 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 ${
+              className={`mt-2 flex h-12 items-center justify-center rounded-full bg-neutral-900 font-medium text-white transition-opacity hover:opacity-90 ${
                 !phone.trim() ? "pointer-events-none opacity-40" : ""
               }`}
             >
@@ -72,22 +71,22 @@ export default function SignInPage() {
 
           <button
             type="button"
-            className="mt-3 flex h-14 w-full items-center justify-center gap-3 rounded-full border border-border bg-background font-medium text-foreground transition-colors hover:bg-secondary"
+            className="mt-3 flex h-14 w-full items-center justify-center gap-3 rounded-full border border-neutral-200 bg-white font-medium text-neutral-900 transition-colors hover:bg-neutral-50"
           >
             <GoogleIcon /> Continue with Google
           </button>
 
           <button
             type="button"
-            className="mt-3 flex h-14 w-full items-center justify-center gap-3 rounded-full border border-border bg-background font-medium text-foreground transition-colors hover:bg-secondary"
+            className="mt-3 flex h-14 w-full items-center justify-center gap-3 rounded-full border border-neutral-200 bg-white font-medium text-neutral-900 transition-colors hover:bg-neutral-50"
           >
             <AppleIcon /> Continue with Apple
           </button>
 
           <div className="my-6 flex items-center gap-4">
-            <span className="h-px flex-1 bg-border" />
-            <span className="text-sm text-muted-foreground">or</span>
-            <span className="h-px flex-1 bg-border" />
+            <span className="h-px flex-1 bg-neutral-200" />
+            <span className="text-sm text-neutral-500">or</span>
+            <span className="h-px flex-1 bg-neutral-200" />
           </div>
 
           {/* Email input */}
@@ -101,18 +100,15 @@ export default function SignInPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email or username"
-              className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
+              className="h-14 w-full rounded-xl border border-neutral-200 bg-white px-4 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none"
             />
             <button
               type="button"
               disabled={!email.trim()}
               onClick={() => {
-                if (email.trim()) {
-                  setEmailSubmitted(true);
-                  setShowPassword(true);
-                }
+                if (email.trim()) setShowPassword(true);
               }}
-              className="mt-4 h-14 w-full rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:bg-muted disabled:text-muted-foreground"
+              className="mt-4 h-14 w-full rounded-full bg-neutral-900 font-medium text-white transition-opacity hover:opacity-90 disabled:bg-neutral-200 disabled:text-neutral-400"
             >
               Continue
             </button>
@@ -134,13 +130,13 @@ export default function SignInPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
+              className="h-14 w-full rounded-xl border border-neutral-200 bg-white px-4 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none"
             />
             <button
               type="button"
               disabled={!password.trim()}
               onClick={() => router.push("/dashboard")}
-              className={`mt-3 flex h-14 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 ${
+              className={`mt-3 flex h-14 items-center justify-center rounded-full bg-neutral-900 font-medium text-white transition-opacity hover:opacity-90 ${
                 !password.trim() ? "pointer-events-none opacity-40" : ""
               }`}
             >
@@ -148,11 +144,11 @@ export default function SignInPage() {
             </button>
           </div>
 
-          <p className="mt-5 text-center text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-5 text-center text-xs leading-relaxed text-neutral-500">
             By continuing, you agree to our{" "}
-            <span className="font-semibold text-foreground">Terms of Service</span>,{" "}
-            <span className="font-semibold text-foreground">Privacy Policy</span> and{" "}
-            <span className="font-semibold text-foreground">Cookie Use</span>.
+            <span className="font-semibold text-neutral-900">Terms of Service</span>,{" "}
+            <span className="font-semibold text-neutral-900">Privacy Policy</span> and{" "}
+            <span className="font-semibold text-neutral-900">Cookie Use</span>.
           </p>
         </div>
       </div>

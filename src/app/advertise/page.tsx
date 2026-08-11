@@ -11,11 +11,11 @@ export default function AdvertisePage() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <main className="light min-h-screen bg-background">
+    <main className="min-h-screen bg-white text-neutral-900">
       <div className="px-6 pt-8 md:px-12">
         <Link
           href="/"
-          className="font-display text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground"
+          className="font-display text-xs uppercase tracking-[0.3em] text-neutral-500 transition-colors hover:text-neutral-900"
         >
           &larr; Back
         </Link>
@@ -24,32 +24,32 @@ export default function AdvertisePage() {
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-16 px-6 py-14 md:px-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-24 lg:py-24">
         {/* Left: marketing copy */}
         <div className="flex flex-col justify-center">
-          <p className="font-display text-sm uppercase tracking-[0.3em] text-primary">
+          <p className="font-display text-sm uppercase tracking-[0.3em] text-orange-600">
             Self-Service Ad Portal
           </p>
-          <h1 className="mt-4 font-display text-5xl font-bold leading-tight tracking-tight sm:text-6xl">
+          <h1 className="mt-4 font-display text-5xl font-bold leading-tight tracking-tight text-neutral-900 sm:text-6xl">
             Advertise with Us
           </h1>
-          <p className="mt-6 max-w-lg text-lg leading-relaxed text-muted-foreground">
+          <p className="mt-6 max-w-lg text-lg leading-relaxed text-neutral-500">
             Reach the audience that fits your sound. Partner with artists who share
             your vision. Create campaigns, target listeners by genre, region, and
             listening behavior — then track every impression in real time.
           </p>
-          <ul className="mt-8 space-y-3 text-base text-foreground">
+          <ul className="mt-8 space-y-3 text-base text-neutral-900">
             <li className="flex items-start gap-3">
-              <span className="mt-1 text-primary">&#10003;</span>
+              <span className="mt-1 text-orange-600">&#10003;</span>
               Self-serve campaign builder with audience targeting
             </li>
             <li className="flex items-start gap-3">
-              <span className="mt-1 text-primary">&#10003;</span>
+              <span className="mt-1 text-orange-600">&#10003;</span>
               Audio, display, and video ad formats
             </li>
             <li className="flex items-start gap-3">
-              <span className="mt-1 text-primary">&#10003;</span>
+              <span className="mt-1 text-orange-600">&#10003;</span>
               Real-time analytics and ROI dashboards
             </li>
             <li className="flex items-start gap-3">
-              <span className="mt-1 text-primary">&#10003;</span>
+              <span className="mt-1 text-orange-600">&#10003;</span>
               No minimum spend — start with any budget
             </li>
           </ul>
@@ -57,31 +57,31 @@ export default function AdvertisePage() {
 
         {/* Right: auth gate */}
         <div className="w-full max-w-md justify-self-center lg:justify-self-end">
-          <h2 className="font-display text-xl font-semibold tracking-tight">
+          <h2 className="font-display text-xl font-semibold tracking-tight text-neutral-900">
             Sign in to your ad account
           </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-2 text-sm text-neutral-500">
             New advertiser? Create your account below.
           </p>
 
           <button
             type="button"
-            className="mt-6 flex h-14 w-full items-center justify-center gap-3 rounded-full border border-border bg-background font-medium text-foreground transition-colors hover:bg-secondary"
+            className="mt-6 flex h-14 w-full items-center justify-center gap-3 rounded-full border border-neutral-200 bg-white font-medium text-neutral-900 transition-colors hover:bg-neutral-50"
           >
             <GoogleIcon /> Continue with Google
           </button>
 
           <button
             type="button"
-            className="mt-3 flex h-14 w-full items-center justify-center gap-3 rounded-full border border-border bg-background font-medium text-foreground transition-colors hover:bg-secondary"
+            className="mt-3 flex h-14 w-full items-center justify-center gap-3 rounded-full border border-neutral-200 bg-white font-medium text-neutral-900 transition-colors hover:bg-neutral-50"
           >
             <AppleIcon /> Continue with Apple
           </button>
 
           <div className="my-6 flex items-center gap-4">
-            <span className="h-px flex-1 bg-border" />
-            <span className="text-sm text-muted-foreground">or</span>
-            <span className="h-px flex-1 bg-border" />
+            <span className="h-px flex-1 bg-neutral-200" />
+            <span className="text-sm text-neutral-500">or</span>
+            <span className="h-px flex-1 bg-neutral-200" />
           </div>
 
           {/* Email input */}
@@ -95,7 +95,7 @@ export default function AdvertisePage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Work email"
-              className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
+              className="h-14 w-full rounded-xl border border-neutral-200 bg-white px-4 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none"
             />
             <button
               type="button"
@@ -103,7 +103,7 @@ export default function AdvertisePage() {
               onClick={() => {
                 if (email.trim()) setShowPassword(true);
               }}
-              className="mt-4 h-14 w-full rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:bg-muted disabled:text-muted-foreground"
+              className="mt-4 h-14 w-full rounded-full bg-neutral-900 font-medium text-white transition-opacity hover:opacity-90 disabled:bg-neutral-200 disabled:text-neutral-400"
             >
               Continue
             </button>
@@ -125,13 +125,13 @@ export default function AdvertisePage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
+              className="h-14 w-full rounded-xl border border-neutral-200 bg-white px-4 text-base text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none"
             />
             <button
               type="button"
               disabled={!password.trim()}
               onClick={() => router.push("/dashboard")}
-              className={`mt-3 flex h-14 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 ${
+              className={`mt-3 flex h-14 items-center justify-center rounded-full bg-neutral-900 font-medium text-white transition-opacity hover:opacity-90 ${
                 !password.trim() ? "pointer-events-none opacity-40" : ""
               }`}
             >
@@ -139,11 +139,11 @@ export default function AdvertisePage() {
             </button>
           </div>
 
-          <p className="mt-5 text-center text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-5 text-center text-xs leading-relaxed text-neutral-500">
             By continuing, you agree to our{" "}
-            <span className="font-semibold text-foreground">Terms of Service</span>,{" "}
-            <span className="font-semibold text-foreground">Privacy Policy</span> and{" "}
-            <span className="font-semibold text-foreground">Cookie Use</span>.
+            <span className="font-semibold text-neutral-900">Terms of Service</span>,{" "}
+            <span className="font-semibold text-neutral-900">Privacy Policy</span> and{" "}
+            <span className="font-semibold text-neutral-900">Cookie Use</span>.
           </p>
         </div>
       </div>
