@@ -1,97 +1,150 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { entryBySlug, entries } from "@/lib/entries";
 
 interface OffScreenProps {
-  num: string;
-  word: string;
-  tagline: string;
+  slug: string;
 }
 
-export function OffScreen({ num, word, tagline }: OffScreenProps) {
+export function OffScreen({ slug }: OffScreenProps) {
+  const entry = entryBySlug(slug);
+  if (!entry) return null;
+
+  const [value, setValue] = useState("");
+
   return (
-    <div className="flex min-h-screen bg-white">
-      {/* Left column — dark */}
-      <div className="hidden flex-col justify-between bg-[#1a1a1a] px-10 py-10 sm:flex sm:w-[45%]">
-        <Link href="/" className="inline-flex items-start opacity-70" aria-label="Musicosy home">
-          <img
-            src="/musicosy-logo.png"
-            alt="Musicosy"
-            className="w-[120px] object-contain lg:w-[160px]"
-          />
+    <main className="min-h-screen bg-background">
+      <div className="px-6 pt-8 md:px-12">
+        <Link
+          href="/"
+          className="font-display text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground"
+        >
+          ← Back
         </Link>
-
-        <div>
-          <h1 className="font-display text-[3.5vw] font-bold uppercase leading-[0.9] tracking-tight text-white">
-            {tagline}
-          </h1>
-          <p className="mt-6 font-display text-sm uppercase tracking-[0.3em] text-[oklch(0.72_0.19_45)]">
-            {num} — {word}
-          </p>
-        </div>
-
-        <p className="text-xs text-white/40">&copy; {new Date().getFullYear()} Musicosy</p>
       </div>
 
-      {/* Right column — white, auth flat on canvas */}
-      <div className="flex w-full flex-col items-center justify-center px-6 py-16 sm:w-[55%]">
-        {/* Large logo on mobile (left column is hidden) */}
-        <Link href="/" className="mb-10 inline-flex items-start sm:hidden" aria-label="Musicosy home">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 px-6 py-14 md:px-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-24 lg:py-24">
+        {/* Left: logo + messaging */}
+        <div>
           <img
             src="/musicosy-logo.png"
             alt="Musicosy"
-            className="w-[180px] object-contain"
+            className="w-full max-w-[420px] lg:max-w-[560px]"
           />
-        </Link>
-
-        <div className="w-full max-w-sm">
-          <h2 className="font-display text-2xl font-semibold text-black">
-            Join Musicosy
-          </h2>
-          <p className="mt-2 text-sm text-gray-500">
-            {word} starts here. Create your account to get going.
+          <p className="mt-10 font-display text-xs uppercase tracking-[0.4em] text-muted-foreground">
+            {entry.num} · {entry.label}
           </p>
+          <h1 className="mt-4 font-display text-[13vw] leading-[0.88] tracking-tight text-foreground sm:text-6xl lg:text-7xl xl:text-8xl">
+            {entry.headline}
+          </h1>
+          <p className="mt-6 max-w-md text-base text-muted-foreground">{entry.sub}</p>
+        </div>
 
-          <div className="mt-8 space-y-3">
-            <button className="flex w-full items-center justify-center gap-3 rounded-xl bg-black px-4 py-3.5 text-sm font-medium text-white transition-colors hover:bg-gray-800">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-              Continue with phone
-            </button>
-            <button className="flex w-full items-center justify-center gap-3 rounded-xl bg-black px-4 py-3.5 text-sm font-medium text-white transition-colors hover:bg-gray-800">
-              <svg className="h-5 w-5" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.07 5.07 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-              Continue with Google
-            </button>
-            <button className="flex w-full items-center justify-center gap-3 rounded-xl bg-black px-4 py-3.5 text-sm font-medium text-white transition-colors hover:bg-gray-800">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.17 3.52 7.58 8.7 7.28c1.12.07 1.94.64 2.65.68 1.02-.12 1.88-.64 2.94-.58 1.25.06 2.18.52 2.77 1.37-2.55 1.56-2.18 4.78.24 5.72-.34.91-.82 1.79-1.55 2.47zM12.03 7.2c-.14-2.12 1.58-3.86 3.56-4 .18 2.32-1.76 4.16-3.56 4z"/></svg>
-              Continue with Apple
-            </button>
-          </div>
+        {/* Right: auth panel */}
+        <div className="w-full max-w-md justify-self-center lg:justify-self-end">
+          <button
+            type="button"
+            className="flex h-14 w-full items-center justify-center gap-3 rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            <PhoneIcon /> Continue with phone
+          </button>
+
+          <button
+            type="button"
+            className="mt-3 flex h-14 w-full items-center justify-center gap-3 rounded-full border border-border bg-background font-medium text-foreground transition-colors hover:bg-secondary"
+          >
+            <GoogleIcon /> Continue with Google
+          </button>
+
+          <button
+            type="button"
+            className="mt-3 flex h-14 w-full items-center justify-center gap-3 rounded-full border border-border bg-background font-medium text-foreground transition-colors hover:bg-secondary"
+          >
+            <AppleIcon /> Continue with Apple
+          </button>
 
           <div className="my-6 flex items-center gap-4">
-            <div className="h-px flex-1 bg-gray-200" />
-            <span className="text-xs text-gray-400">or</span>
-            <div className="h-px flex-1 bg-gray-200" />
+            <span className="h-px flex-1 bg-border" />
+            <span className="text-sm text-muted-foreground">or</span>
+            <span className="h-px flex-1 bg-border" />
           </div>
 
-          <div className="space-y-3">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (value.trim()) window.location.href = "/";
+            }}
+          >
+            <label htmlFor="identifier" className="sr-only">
+              Email or username
+            </label>
             <input
-              type="text"
+              id="identifier"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
               placeholder="Email or username"
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3.5 text-sm text-black placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
             />
-            <button className="w-full rounded-xl bg-gray-100 px-4 py-3.5 text-sm font-medium text-gray-400">
+            <button
+              type="submit"
+              disabled={!value.trim()}
+              className="mt-4 h-14 w-full rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:bg-muted disabled:text-muted-foreground"
+            >
               Continue
             </button>
-          </div>
+          </form>
 
-          <p className="mt-6 text-center text-xs text-gray-400">
+          <p className="mt-5 text-center text-xs leading-relaxed text-muted-foreground">
             By continuing, you agree to our{" "}
-            <a href="/terms" className="underline hover:text-black">Terms of Service</a>,{" "}
-            <a href="/privacy" className="underline hover:text-black">Privacy Policy</a> and{" "}
-            <a href="/cookies" className="underline hover:text-black">Cookie Use</a>.
+            <span className="font-semibold text-foreground">Terms of Service</span>,{" "}
+            <span className="font-semibold text-foreground">Privacy Policy</span> and{" "}
+            <span className="font-semibold text-foreground">Cookie Use</span>.
           </p>
+
+          <div className="mt-10 flex flex-wrap justify-center gap-x-4 gap-y-2">
+            {entries
+              .filter((e) => e.slug !== entry.slug)
+              .map((e) => (
+                <Link
+                  key={e.slug}
+                  href={`/${e.slug}`}
+                  className="font-display text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {e.label}
+                </Link>
+              ))}
+          </div>
         </div>
       </div>
-    </div>
+    </main>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
+    </svg>
+  );
+}
+
+function GoogleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+      <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.7v3h3.9c2.3-2.1 3.5-5.2 3.5-8.9z" />
+      <path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1A12 12 0 0 0 12 24z" />
+      <path fill="#FBBC05" d="M5.4 14.4a7.2 7.2 0 0 1 0-4.6V6.7H1.4a12 12 0 0 0 0 10.7l4-3z" />
+      <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.4 6.7l4 3.1C6.3 6.9 8.9 4.8 12 4.8z" />
+    </svg>
+  );
+}
+
+function AppleIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M16.4 12.7c0-2.6 2.1-3.9 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.1 2.5-1.8 3.1-.5 7.6 1.3 10.1.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.3.8c1.4 0 2.3-1.2 3.1-2.5.6-.9 1-1.8 1.3-2.8-3.3-1.3-2.7-4-2.7-4zM14 4.9c.7-.9 1.2-2.1 1.1-3.3-1 0-2.3.7-3.1 1.6-.7.8-1.3 2-1.1 3.2 1.2.1 2.4-.6 3.1-1.5z" />
+    </svg>
   );
 }
