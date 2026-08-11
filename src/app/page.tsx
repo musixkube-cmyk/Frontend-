@@ -146,13 +146,13 @@ export default function Home() {
         <Logo className="h-8" />
         <div className="flex items-center gap-2">
           <Link
-            href="/signin/stream"
+            href="/signin"
             className="rounded-full border border-ink-foreground/25 px-4 py-2 text-sm font-medium text-ink-foreground/90 backdrop-blur transition-colors hover:border-primary hover:text-primary"
           >
             Sign in
           </Link>
           <Link
-            href="/signin/stream"
+            href="/signin"
             className="rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow"
           >
             Join
@@ -210,7 +210,7 @@ export default function Home() {
               </p>
               <h2 className="flex items-baseline gap-2 font-display text-[20vw] font-bold uppercase leading-[0.8] tracking-tighter sm:text-[15vw]">
                 {s.word}
-                <Link href={`/signin/${s.id}`} className="text-[0.35em] font-semibold normal-case tracking-normal text-primary transition-colors hover:text-primary/80">+</Link>
+                <Link href="/signin" className="text-[0.35em] font-semibold normal-case tracking-normal text-primary transition-colors hover:text-primary/80">+</Link>
               </h2>
             </div>
             <p className="mt-8 max-w-lg text-lg leading-relaxed text-ink-muted">{s.body}</p>
