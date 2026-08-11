@@ -147,6 +147,11 @@ export default function Home() {
 
       {/* Top bar */}
       <header className="fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 sm:px-10">
+        <img
+          src="/logo-full-same-row.png"
+          alt="Musicosy"
+          className="h-7 w-auto object-contain brightness-0 invert"
+        />
         <div className="flex items-center gap-2">
           <Link
             href="/signin"
