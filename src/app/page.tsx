@@ -224,11 +224,6 @@ export default function Home() {
 
       {/* Bottom rail */}
       <footer className="mt-auto border-t border-ink-foreground/10 px-5 py-6 sm:px-10 lg:pl-32">
-        <img
-          src="/logo-full-same-row.png"
-          alt="Musicosy"
-          className="mb-4 h-8 w-auto object-contain brightness-0 invert"
-        />
         <nav aria-label="Bottom rail" className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-ink-muted">
           <a href="/about" className="transition-colors hover:text-ink-foreground">About</a>
           <a href="/get-app" className="transition-colors hover:text-ink-foreground">Get App</a>
