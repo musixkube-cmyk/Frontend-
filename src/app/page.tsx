@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Logo } from "@/components/Logo";
 
 const sections = [
   {
@@ -41,8 +40,8 @@ const sections = [
     body: "Promote and schedule events, market your shows, sell tickets.",
   },
   {
-    id: "advertise",
-    word: "Advertise",
+    id: "reach",
+    word: "Reach",
     body: "Reach the audience that fits your sound. Partner with artists who share your vision.",
   },
 ];
@@ -148,7 +147,6 @@ export default function Home() {
 
       {/* Top bar */}
       <header className="fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 sm:px-10">
-        <Logo className="h-8" />
         <div className="flex items-center gap-2">
           <Link
             href="/signin"
@@ -215,7 +213,7 @@ export default function Home() {
               </p>
               <h2 className="flex items-baseline gap-2 font-display text-[20vw] font-bold uppercase leading-[0.8] tracking-tighter sm:text-[15vw]">
                 {s.word}
-                <Link href={s.id === "advertise" ? "/advertise" : "/signin"} className="text-[0.35em] font-semibold normal-case tracking-normal text-primary transition-colors hover:text-primary/80">+</Link>
+                <Link href={s.id === "reach" ? "/reach" : "/signin"} className="text-[0.35em] font-semibold normal-case tracking-normal text-primary transition-colors hover:text-primary/80">+</Link>
               </h2>
             </div>
             <p className="mt-8 max-w-lg text-lg leading-relaxed text-ink-muted">{s.body}</p>
@@ -226,6 +224,11 @@ export default function Home() {
 
       {/* Bottom rail */}
       <footer className="mt-auto border-t border-ink-foreground/10 px-5 py-6 sm:px-10 lg:pl-32">
+        <img
+          src="/logo-full-same-row.png"
+          alt="Musicosy"
+          className="mb-4 h-8 w-auto object-contain brightness-0 invert"
+        />
         <nav aria-label="Bottom rail" className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-ink-muted">
           <a href="/about" className="transition-colors hover:text-ink-foreground">About</a>
           <a href="/get-app" className="transition-colors hover:text-ink-foreground">Get App</a>
@@ -235,6 +238,7 @@ export default function Home() {
           <a href="/cookies" className="transition-colors hover:text-ink-foreground">Cookies</a>
           <a href="/dmca" className="transition-colors hover:text-ink-foreground">DMCA</a>
           <a href="/careers" className="transition-colors hover:text-ink-foreground">Careers</a>
+          <a href="/reach" className="transition-colors hover:text-ink-foreground">Advertise</a>
           <a href="/ads-business" className="transition-colors hover:text-ink-foreground">Ads & Business</a>
           <a href="/labels" className="transition-colors hover:text-ink-foreground">Labels</a>
           <a href="/creators" className="transition-colors hover:text-ink-foreground">Creators</a>
