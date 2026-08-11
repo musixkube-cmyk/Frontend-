@@ -8,17 +8,37 @@ const sections = [
   {
     id: "stream",
     word: "Stream",
-    body: "An endless social feed of tracks, live sets, clips and podcasts — from the artists you follow and the ones you're about to.",
+    body: "Your favorite songs and podcasts. Follow and discover your favorite creators, build your own playlist, go live with friends who share your taste in music.",
   },
   {
     id: "earn",
     word: "Earn",
-    body: "Every play, repost and licence is tracked. Splits pay out to the people who made the record, automatically.",
+    body: "Monetize your audience: streams, downloads, subscribers and merch.",
   },
   {
     id: "publish",
     word: "Publish",
-    body: "Post once and land in front of labels, sync agents, distributors and advertisers hunting for exactly your sound.",
+    body: "Your music once. Labels, sync agents, distributors and advertisers looking for your sound and audience.",
+  },
+  {
+    id: "create",
+    word: "Create",
+    body: "Music and podcasts with studio tools built to help you reach your audience.",
+  },
+  {
+    id: "engage",
+    word: "Engage",
+    body: "Talk to your listeners and followers, get real-time feedback, and sell merch directly.",
+  },
+  {
+    id: "manage",
+    word: "Manage",
+    body: "Handle rights, touring, rosters, distribution and social campaigns — all in one place.",
+  },
+  {
+    id: "grow",
+    word: "Grow",
+    body: "Reach the audience that fits your sound. Partner with artists who share your vision.",
   },
 ];
 
