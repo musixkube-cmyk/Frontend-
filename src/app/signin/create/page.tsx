@@ -1,5 +1,5 @@
 import { OffScreen } from "@/components/OffScreen";
 
-export default function CreatePage() {
+export default function Page() {
   return <OffScreen slug="create" />;
 }

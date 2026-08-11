@@ -1,5 +1,5 @@
 import { OffScreen } from "@/components/OffScreen";
 
-export default function StreamPage() {
+export default function Page() {
   return <OffScreen slug="stream" />;
 }

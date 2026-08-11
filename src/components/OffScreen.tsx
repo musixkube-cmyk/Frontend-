@@ -25,21 +25,14 @@ export function OffScreen({ slug }: OffScreenProps) {
         </Link>
       </div>
 
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 px-6 py-14 md:px-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-24 lg:py-24">
-        {/* Left: logo + messaging */}
-        <div>
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-16 px-6 py-14 md:px-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-24 lg:py-24">
+        {/* Left: logo only — aligned with auth */}
+        <div className="flex items-center justify-start">
           <img
             src="/musicosy-logo.png"
             alt="Musicosy"
             className="w-full max-w-[420px] lg:max-w-[560px]"
           />
-          <p className="mt-10 font-display text-xs uppercase tracking-[0.4em] text-muted-foreground">
-            {entry.num} · {entry.label}
-          </p>
-          <h1 className="mt-4 font-display text-[13vw] leading-[0.88] tracking-tight text-foreground sm:text-6xl lg:text-7xl xl:text-8xl">
-            {entry.headline}
-          </h1>
-          <p className="mt-6 max-w-md text-base text-muted-foreground">{entry.sub}</p>
         </div>
 
         {/* Right: auth panel */}
@@ -109,7 +102,7 @@ export function OffScreen({ slug }: OffScreenProps) {
               .map((e) => (
                 <Link
                   key={e.slug}
-                  href={`/${e.slug}`}
+                  href={`/signin/${e.slug}`}
                   className="font-display text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {e.label}
