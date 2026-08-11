@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/Logo";
 import { BottomRail } from "@/components/BottomRail";
-import { Starfield } from "@/components/Starfield";
 
 const sections = [
   {
@@ -59,8 +58,10 @@ export default function Home() {
 
   return (
     <div className="relative flex min-h-screen flex-col bg-ink text-ink-foreground">
-      {/* Animated starfield background (replaces astronaut video) */}
-      <Starfield />
+      {/* Full-bleed background */}
+      <div className="fixed inset-0 -z-10 bg-ink">
+        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/50 to-ink/20" />
+      </div>
 
       {/* Top bar */}
       <header className="fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 sm:px-10">
