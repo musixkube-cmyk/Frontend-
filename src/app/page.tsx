@@ -88,8 +88,8 @@ export default function Home() {
           playsInline
           aria-hidden="true"
         />
-        <div className="absolute inset-0 bg-ink/50" />
-        <div className="absolute inset-0 bg-gradient-to-r from-ink/60 via-ink/30 to-ink/10" />
+        <div className="absolute inset-0 bg-ink/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink/70 via-ink/40 to-ink/15" />
       </div>
 
       {/* Top bar */}
