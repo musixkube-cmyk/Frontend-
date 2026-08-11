@@ -144,6 +144,25 @@ export default function Home() {
         </section>
       ))}
 
+      {/* Bottom rail */}
+      <footer className="mt-auto border-t border-ink-foreground/10 px-5 py-6 sm:px-10 lg:pl-32">
+        <nav aria-label="Bottom rail" className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-ink-muted">
+          <a href="/about" className="transition-colors hover:text-ink-foreground">About</a>
+          <a href="/get-app" className="transition-colors hover:text-ink-foreground">Get App</a>
+          <a href="/help" className="transition-colors hover:text-ink-foreground">Help</a>
+          <a href="/terms" className="transition-colors hover:text-ink-foreground">Terms</a>
+          <a href="/privacy" className="transition-colors hover:text-ink-foreground">Privacy</a>
+          <a href="/cookies" className="transition-colors hover:text-ink-foreground">Cookies</a>
+          <a href="/careers" className="transition-colors hover:text-ink-foreground">Careers</a>
+          <a href="/ads-business" className="transition-colors hover:text-ink-foreground">Ads & Business</a>
+          <a href="/developers" className="transition-colors hover:text-ink-foreground">Developers</a>
+          <a href="/news" className="transition-colors hover:text-ink-foreground">News</a>
+          <a href="/us-tida" className="transition-colors hover:text-ink-foreground">US TIDA</a>
+          <a href="/accessibility" className="transition-colors hover:text-ink-foreground">Accessibility</a>
+          <a href="/help-center" className="transition-colors hover:text-ink-foreground">Help Center</a>
+        </nav>
+        <p className="mt-3 text-xs text-ink-muted">&copy; {new Date().getFullYear()} Musicosy</p>
+      </footer>
     </div>
   );
 }
