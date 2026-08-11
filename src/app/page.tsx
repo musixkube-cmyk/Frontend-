@@ -36,8 +36,13 @@ const sections = [
     body: "Handle rights, touring, rosters, distribution and social campaigns — all in one place.",
   },
   {
-    id: "grow",
-    word: "Grow",
+    id: "promote",
+    word: "Promote",
+    body: "Promote and schedule events, market your shows, sell tickets.",
+  },
+  {
+    id: "advertise",
+    word: "Advertise",
     body: "Reach the audience that fits your sound. Partner with artists who share your vision.",
   },
 ];
@@ -210,7 +215,7 @@ export default function Home() {
               </p>
               <h2 className="flex items-baseline gap-2 font-display text-[20vw] font-bold uppercase leading-[0.8] tracking-tighter sm:text-[15vw]">
                 {s.word}
-                <Link href="/signin" className="text-[0.35em] font-semibold normal-case tracking-normal text-primary transition-colors hover:text-primary/80">+</Link>
+                <Link href={s.id === "advertise" ? "/advertise" : "/signin"} className="text-[0.35em] font-semibold normal-case tracking-normal text-primary transition-colors hover:text-primary/80">+</Link>
               </h2>
             </div>
             <p className="mt-8 max-w-lg text-lg leading-relaxed text-ink-muted">{s.body}</p>

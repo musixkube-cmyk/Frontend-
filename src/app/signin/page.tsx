@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useState } from "react";
 
 export default function SignInPage() {
-  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [showPhone, setShowPhone] = useState(false);
 
   return (
     <main className="light min-h-screen bg-background">
@@ -31,10 +33,35 @@ export default function SignInPage() {
         <div className="w-full max-w-md justify-self-center lg:justify-self-end">
           <button
             type="button"
+            onClick={() => setShowPhone(!showPhone)}
             className="flex h-14 w-full items-center justify-center gap-3 rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90"
           >
             <PhoneIcon /> Continue with phone
           </button>
+
+          {/* Phone input — slow reveal */}
+          <div
+            className={`grid transition-all duration-500 ease-in-out ${
+              showPhone ? "mt-3 max-h-40 opacity-100" : "mt-0 max-h-0 opacity-0"
+            }`}
+            style={{ overflow: showPhone ? "visible" : "hidden" }}
+          >
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="+1 (555) 000-0000"
+              className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
+            />
+            <Link
+              href="/dashboard"
+              className={`mt-2 flex h-12 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 ${
+                !phone.trim() ? "pointer-events-none opacity-40" : ""
+              }`}
+            >
+              Send code
+            </Link>
+          </div>
 
           <button
             type="button"
@@ -59,7 +86,7 @@ export default function SignInPage() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              if (value.trim()) window.location.href = "/";
+              if (email.trim()) window.location.href = "/dashboard";
             }}
           >
             <label htmlFor="identifier" className="sr-only">
@@ -67,14 +94,15 @@ export default function SignInPage() {
             </label>
             <input
               id="identifier"
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email or username"
               className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
             />
             <button
               type="submit"
-              disabled={!value.trim()}
+              disabled={!email.trim()}
               className="mt-4 h-14 w-full rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:bg-muted disabled:text-muted-foreground"
             >
               Continue
