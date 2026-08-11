@@ -15,7 +15,7 @@ export function OffScreen({ slug }: OffScreenProps) {
   const [value, setValue] = useState("");
 
   return (
-    <main className="min-h-screen bg-background">
+    <main className="light min-h-screen bg-background">
       <div className="px-6 pt-8 md:px-12">
         <Link
           href="/"
