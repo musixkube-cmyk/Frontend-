@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Logo } from "@/components/Logo";
-import { BottomRail } from "@/components/BottomRail";
 
 const sections = [
   {
@@ -145,8 +144,6 @@ export default function Home() {
         </section>
       ))}
 
-      {/* Footer */}
-      <BottomRail />
     </div>
   );
 }
