@@ -149,17 +149,13 @@ export default function Home() {
               <p className="font-display text-sm uppercase tracking-[0.3em] text-primary">
                 0{i + 1}
               </p>
-              <h2 className="font-display text-[20vw] font-bold uppercase leading-[0.8] tracking-tighter sm:text-[15vw]">
+              <h2 className="flex items-baseline gap-2 font-display text-[20vw] font-bold uppercase leading-[0.8] tracking-tighter sm:text-[15vw]">
                 {s.word}
+                <Link href="/onboarding" className="text-[0.35em] font-semibold normal-case tracking-normal text-primary transition-colors hover:text-primary/80">+</Link>
               </h2>
             </div>
             <p className="mt-8 max-w-lg text-lg leading-relaxed text-ink-muted">{s.body}</p>
-            <Link
-              href="/onboarding"
-              className="mt-8 inline-flex rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-glow"
-            >
-              Start now
-            </Link>
+
           </div>
         </section>
       ))}
