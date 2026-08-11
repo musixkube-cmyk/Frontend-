@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [showPhone, setShowPhone] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
 
   return (
     <main className="light min-h-screen bg-background">
@@ -15,7 +20,7 @@ export default function SignInPage() {
           href="/"
           className="font-display text-xs uppercase tracking-[0.3em] text-muted-foreground transition-colors hover:text-foreground"
         >
-          ← Back
+          &larr; Back
         </Link>
       </div>
 
@@ -53,14 +58,16 @@ export default function SignInPage() {
               placeholder="+1 (555) 000-0000"
               className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
             />
-            <Link
-              href="/dashboard"
+            <button
+              type="button"
+              disabled={!phone.trim()}
+              onClick={() => router.push("/dashboard")}
               className={`mt-2 flex h-12 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 ${
                 !phone.trim() ? "pointer-events-none opacity-40" : ""
               }`}
             >
               Send code
-            </Link>
+            </button>
           </div>
 
           <button
@@ -83,12 +90,8 @@ export default function SignInPage() {
             <span className="h-px flex-1 bg-border" />
           </div>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (email.trim()) window.location.href = "/dashboard";
-            }}
-          >
+          {/* Email input */}
+          <div>
             <label htmlFor="identifier" className="sr-only">
               Email or username
             </label>
@@ -101,13 +104,49 @@ export default function SignInPage() {
               className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
             />
             <button
-              type="submit"
+              type="button"
               disabled={!email.trim()}
+              onClick={() => {
+                if (email.trim()) {
+                  setEmailSubmitted(true);
+                  setShowPassword(true);
+                }
+              }}
               className="mt-4 h-14 w-full rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:bg-muted disabled:text-muted-foreground"
             >
               Continue
             </button>
-          </form>
+          </div>
+
+          {/* Password — slow reveal after email Continue */}
+          <div
+            className={`grid transition-all duration-500 ease-in-out ${
+              showPassword ? "mt-4 max-h-40 opacity-100" : "mt-0 max-h-0 opacity-0"
+            }`}
+            style={{ overflow: showPassword ? "visible" : "hidden" }}
+          >
+            <label htmlFor="password" className="sr-only">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              className="h-14 w-full rounded-xl border border-border bg-background px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-ring focus:outline-none"
+            />
+            <button
+              type="button"
+              disabled={!password.trim()}
+              onClick={() => router.push("/dashboard")}
+              className={`mt-3 flex h-14 items-center justify-center rounded-full bg-primary font-medium text-primary-foreground transition-opacity hover:opacity-90 ${
+                !password.trim() ? "pointer-events-none opacity-40" : ""
+              }`}
+            >
+              Sign in
+            </button>
+          </div>
 
           <p className="mt-5 text-center text-xs leading-relaxed text-muted-foreground">
             By continuing, you agree to our{" "}
