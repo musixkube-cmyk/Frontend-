@@ -130,7 +130,7 @@ export default function AdvertisePage() {
             <button
               type="button"
               disabled={!password.trim()}
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.push("/ads")}
               className={`mt-3 flex h-14 items-center justify-center rounded-full bg-neutral-900 font-medium text-white transition-opacity hover:opacity-90 ${
                 !password.trim() ? "pointer-events-none opacity-40" : ""
               }`}
