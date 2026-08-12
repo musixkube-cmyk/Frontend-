@@ -1,8 +1,16 @@
-export default function BillingPage() {
+"use client";
+
+import Link from "next/link";
+import { PageHeader, Button, TabBar, FormField, StatusToggle } from "@/components/ads/ui";
+import { useState } from "react";
+
+export default function AgencyBillingPage() {
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold tracking-tight text-neutral-900">Billing</h1>
-      <p className="mt-2 text-sm text-neutral-500">This page is under construction.</p>
+      <PageHeader title="Agency Billing" description="Agency-level billing workspace with commission tracking." />
+      <div className="rounded-xl border border-neutral-100 bg-white p-6">
+        <p className="text-sm text-neutral-500">Content for Agency Billing will appear here.</p>
+      </div>
     </div>
   );
 }

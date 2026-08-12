@@ -12,7 +12,8 @@ const navTree = [
     children: [
       { label: "Dashboard", href: "/ads", icon: "dashboard" },
       { label: "All Campaigns", href: "/ads/campaigns", icon: "campaigns" },
-      { label: "Notifications", href: "/ads/notifications", icon: "bell" },
+      { label: "GMV Max", href: "/ads/gmv-max", icon: "chart" },
+      { label: "Notification Center", href: "/ads/notifications", icon: "bell" },
     ],
   },
   {
@@ -23,22 +24,18 @@ const navTree = [
       { label: "Ad Groups", href: "/ads/campaigns/groups", icon: "layers" },
       { label: "Ads", href: "/ads/campaigns/ads", icon: "ad" },
       { label: "Drafts", href: "/ads/campaigns/drafts", icon: "draft" },
-      {
-        label: "Create Campaign",
-        href: "/ads/campaigns/create",
-        icon: "plus-circle",
-        primary: true,
-      },
+      { label: "Create Campaign", href: "/ads/campaigns/create", icon: "plus-circle", primary: true },
     ],
   },
   {
     label: "Assets",
     icon: "folder",
     children: [
-      { label: "Creative Library", href: "/ads/creatives/library", icon: "folder" },
-      { label: "Creative Studio", href: "/ads/creatives/studio", icon: "palette" },
-      { label: "Audiences", href: "/ads/audiences", icon: "users" },
-      { label: "Catalogs", href: "/ads/catalog", icon: "catalog" },
+      { label: "Creative Library", href: "/ads/assets/creative-library", icon: "folder" },
+      { label: "Creative Studio", href: "/ads/assets/creative-studio", icon: "palette" },
+      { label: "Creator Partnerships", href: "/ads/assets/creator-partnerships", icon: "users" },
+      { label: "Audiences", href: "/ads/assets/audiences", icon: "users" },
+      { label: "Catalog Manager", href: "/ads/assets/catalogs", icon: "catalog" },
       { label: "Placements & Inventory", href: "/ads/inventory", icon: "layout" },
     ],
   },
@@ -46,12 +43,16 @@ const navTree = [
     label: "Measure",
     icon: "chart",
     children: [
-      { label: "Analytics Overview", href: "/ads/analytics", icon: "chart" },
-      { label: "Reports", href: "/ads/analytics/reports", icon: "report" },
-      { label: "Attribution", href: "/ads/analytics/attribution", icon: "path" },
-      { label: "Experiments", href: "/ads/analytics/experiments", icon: "flask" },
-      { label: "Audience Insights", href: "/ads/analytics/audience-insights", icon: "insight" },
-      { label: "Video & Audio Insights", href: "/ads/analytics/video-audio-insights", icon: "play-circle" },
+      { label: "Analytics Overview", href: "/ads/measure/analytics", icon: "chart" },
+      { label: "Performance Metrics", href: "/ads/measure/performance", icon: "chart" },
+      { label: "Audience Insights", href: "/ads/measure/audience", icon: "insight" },
+      { label: "Media Insights", href: "/ads/measure/media-insights", icon: "play-circle" },
+      { label: "Attribution", href: "/ads/measure/attribution", icon: "path" },
+      { label: "Reports", href: "/ads/measure/reports", icon: "report" },
+      { label: "Experiments & Studies", href: "/ads/measure/experiments", icon: "flask" },
+      { label: "Cross-Media Measurement", href: "/ads/measure/cross-media", icon: "layout" },
+      { label: "Third-Party Measurement", href: "/ads/measure/third-party-measurement", icon: "shield" },
+      { label: "Metrics Glossary", href: "/ads/measure/metrics-glossary", icon: "file-text" },
     ],
   },
   {
@@ -60,8 +61,10 @@ const navTree = [
     children: [
       { label: "Leads Center", href: "/ads/leads", icon: "user-check" },
       { label: "Instant Forms", href: "/ads/leads/instant-forms", icon: "file-text" },
+      { label: "Website Forms", href: "/ads/leads/website-forms", icon: "file-text" },
       { label: "Direct Messages", href: "/ads/leads/direct-messages", icon: "message" },
       { label: "Inbox", href: "/ads/leads/inbox", icon: "inbox" },
+      { label: "Messaging Settings", href: "/ads/leads/messaging", icon: "settings" },
       { label: "CRM Integrations", href: "/ads/leads/crm", icon: "link" },
     ],
   },
@@ -69,24 +72,30 @@ const navTree = [
     label: "Manage",
     icon: "zap",
     children: [
-      { label: "Events Manager", href: "/ads/events", icon: "calendar" },
-      { label: "Automated Rules", href: "/ads/rules", icon: "zap" },
-      { label: "Comments Manager", href: "/ads/comments", icon: "message-square" },
-      { label: "Brand Safety", href: "/ads/brand-safety", icon: "shield" },
-      { label: "Integrations", href: "/ads/integrations", icon: "puzzle" },
-      { label: "AI Skills & MCP", href: "/ads/ai/skills", icon: "sparkles" },
+      { label: "Events Manager", href: "/ads/manage/events", icon: "calendar" },
+      { label: "Automated Rules", href: "/ads/manage/rules", icon: "zap" },
+      { label: "Comments Manager", href: "/ads/manage/comments", icon: "message-square" },
+      { label: "Brand Safety", href: "/ads/manage/brand-safety", icon: "shield" },
+      { label: "MMM Data Requests", href: "/ads/manage/mmm", icon: "report" },
+      { label: "Planning Tools", href: "/ads/manage/planning", icon: "target" },
+      { label: "Integrations", href: "/ads/manage/integrations", icon: "puzzle" },
+      { label: "AI Skills & MCP", href: "/ads/manage/ai-skills", icon: "sparkles" },
     ],
   },
   {
     label: "Billing",
     icon: "credit-card",
     children: [
-      { label: "Overview", href: "/ads/billing", icon: "credit-card" },
+      { label: "Billing Overview", href: "/ads/billing", icon: "credit-card" },
+      { label: "Ads Plans & Subscriptions", href: "/ads/billing/plans", icon: "wallet" },
+      { label: "Payment Preferences", href: "/ads/billing/payment-preferences", icon: "settings" },
       { label: "Payment Methods", href: "/ads/billing/payment-methods", icon: "wallet" },
+      { label: "Billing Profile", href: "/ads/billing/profile", icon: "building" },
       { label: "Invoices", href: "/ads/billing/invoices", icon: "receipt" },
       { label: "Transactions", href: "/ads/billing/transactions", icon: "arrow-left-right" },
-      { label: "Taxes", href: "/ads/billing/tax", icon: "percent" },
-      { label: "Credits & Promotions", href: "/ads/billing/credits", icon: "gift" },
+      { label: "Taxes", href: "/ads/billing/taxes", icon: "percent" },
+      { label: "Credits, Rebates & Promotions", href: "/ads/billing/credits", icon: "gift" },
+      { label: "Billing Support", href: "/ads/billing/support", icon: "help" },
     ],
   },
   {
@@ -94,12 +103,26 @@ const navTree = [
     icon: "settings",
     children: [
       { label: "Account & Business", href: "/ads/settings/account", icon: "building" },
+      { label: "Plan & Tier Status", href: "/ads/settings/tiers", icon: "wallet" },
       { label: "Team & Permissions", href: "/ads/settings/team", icon: "users-cog" },
       { label: "Verification", href: "/ads/settings/verification", icon: "check-circle" },
-      { label: "Security & Documents", href: "/ads/settings/security", icon: "lock" },
-      { label: "Notification Preferences", href: "/ads/settings/notifications", icon: "bell" },
+      { label: "Customer Review", href: "/ads/settings/customer-review", icon: "check-circle" },
+      { label: "Documents", href: "/ads/settings/documents", icon: "file-text" },
       { label: "Targeting Defaults", href: "/ads/settings/targeting-defaults", icon: "target" },
+      { label: "Notification Preferences", href: "/ads/settings/notifications", icon: "bell" },
       { label: "API Access", href: "/ads/settings/api", icon: "code" },
+      { label: "Policies & Security", href: "/ads/settings/policies-security", icon: "lock" },
+    ],
+  },
+  {
+    label: "Agency",
+    icon: "building",
+    children: [
+      { label: "Agency Dashboard", href: "/ads/agency", icon: "dashboard" },
+      { label: "Clients", href: "/ads/agency/clients", icon: "users" },
+      { label: "Cross-Client Reporting", href: "/ads/agency/cross-client", icon: "chart" },
+      { label: "Agency Billing", href: "/ads/agency/billing", icon: "credit-card" },
+      { label: "Agency Team", href: "/ads/agency/team", icon: "users-cog" },
     ],
   },
 ];
@@ -255,6 +278,14 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
               My Advertiser Account
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
             </button>
+
+            {/* Plan / Subscription Status */}
+            <Link href="/ads/billing/plans" className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-500 transition-colors hover:bg-neutral-50 hover:text-neutral-700">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" /><path d="M1 10h22" />
+              </svg>
+              Social Scroll — Medium
+            </Link>
           </div>
 
           <div className="flex items-center gap-2">
@@ -435,6 +466,8 @@ function SidebarIcon({ type, size = 16 }: { type: string; size?: number }) {
       return <svg {...p}><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>;
     case "settings":
       return <svg {...p}><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>;
+    case "help":
+      return <svg {...p}><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>;
     default:
       return <svg {...p}><circle cx="12" cy="12" r="1" /></svg>;
   }

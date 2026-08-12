@@ -1,59 +1,54 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { PageHeader, MetricCard, StatusBadge, DataTable, FilterBar, BulkActionToolbar, EmptyState, Button, TabBar, FormField, EstimatePanel, PolicyPanel, ActivityTimeline, CardGrid, StatusToggle } from "@/components/ads/ui";
 
-export default function Page() {
+export default function PlacementsAndInventoryPage() {
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState("");
+  const toggleSelect = (id: string) => { const n = new Set(selected); n.has(id) ? n.delete(id) : n.add(id); setSelected(n); };
+  const toggleAll = () => { setSelected(selected.size === 5 ? new Set() : new Set(["1","2","3","4","5"].map(String))); };
+
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Placements & Inventory</h1>
-        <p className="mt-1 text-sm text-neutral-500">Understand availability and performance across all ad placements.</p>
-      </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Link
-            href="/ads/inventory/feed-audio"
-            className="rounded-xl border border-neutral-100 bg-white p-5 transition-colors hover:border-neutral-200 hover:bg-neutral-50"
-          >
-            <h3 className="text-sm font-semibold text-neutral-900">In-Feed Audio</h3>
-            <p className="mt-1 text-xs text-neutral-500">Audio ads between songs in user feeds</p>
-          </Link>
-          <Link
-            href="/ads/inventory/feed-video"
-            className="rounded-xl border border-neutral-100 bg-white p-5 transition-colors hover:border-neutral-200 hover:bg-neutral-50"
-          >
-            <h3 className="text-sm font-semibold text-neutral-900">In-Feed Video</h3>
-            <p className="mt-1 text-xs text-neutral-500">Video ads in content feeds</p>
-          </Link>
-          <Link
-            href="/ads/inventory/top-feed"
-            className="rounded-xl border border-neutral-100 bg-white p-5 transition-colors hover:border-neutral-200 hover:bg-neutral-50"
-          >
-            <h3 className="text-sm font-semibold text-neutral-900">Top Feed</h3>
-            <p className="mt-1 text-xs text-neutral-500">Premium placement at top of feed</p>
-          </Link>
-          <Link
-            href="/ads/inventory/search"
-            className="rounded-xl border border-neutral-100 bg-white p-5 transition-colors hover:border-neutral-200 hover:bg-neutral-50"
-          >
-            <h3 className="text-sm font-semibold text-neutral-900">Search Ads</h3>
-            <p className="mt-1 text-xs text-neutral-500">Ads in search results</p>
-          </Link>
-          <Link
-            href="/ads/inventory/catalog"
-            className="rounded-xl border border-neutral-100 bg-white p-5 transition-colors hover:border-neutral-200 hover:bg-neutral-50"
-          >
-            <h3 className="text-sm font-semibold text-neutral-900">Catalog Ads</h3>
-            <p className="mt-1 text-xs text-neutral-500">Product-based catalog placements</p>
-          </Link>
-          <Link
-            href="/ads/inventory/automatic"
-            className="rounded-xl border border-neutral-100 bg-white p-5 transition-colors hover:border-neutral-200 hover:bg-neutral-50"
-          >
-            <h3 className="text-sm font-semibold text-neutral-900">Automatic Placements</h3>
-            <p className="mt-1 text-xs text-neutral-500">Let the system optimize placement selection</p>
-          </Link>
+      <PageHeader title="Placements & Inventory" description="Review placement performance and manage inventory allocation." />
 
+      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <MetricCard label="Total impressions" value="142K" delta="+8%" deltaType="positive" />
+        <MetricCard label="In-Feed Audio" value="68K" />
+        <MetricCard label="In-Feed Video" value="42K" />
+        <MetricCard label="Top Feed" value="32K" />
       </div>
+
+      <FilterBar searchPlaceholder="Search…" onSearch={setSearch} />
+
+      <BulkActionToolbar selectedCount={selected.size} actions={[
+        { label: "Pause", onClick: () => {} },
+        { label: "Resume", onClick: () => {} },
+        { label: "Delete", onClick: () => {}, variant: "danger" as const },
+      ]} />
+
+      <DataTable
+        columns={[
+          { key: "placement", label: "Placement", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+          { key: "impressions", label: "Impressions" },
+          { key: "clicks", label: "Clicks" },
+          { key: "ctr", label: "CTR" },
+          { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> }
+        ]}
+        data={[
+            { id: "1", placement: "In-Feed Audio", impressions: "68K", clicks: "890", ctr: "1.31%", status: "active" },
+            { id: "2", placement: "In-Feed Video", impressions: "42K", clicks: "520", ctr: "1.24%", status: "active" },
+            { id: "3", placement: "Top Feed", impressions: "32K", clicks: "410", ctr: "1.28%", status: "active" },
+            { id: "4", placement: "Search Ads", impressions: "12K", clicks: "180", ctr: "1.50%", status: "active" },
+            { id: "5", placement: "Catalog Ads", impressions: "8K", clicks: "95", ctr: "1.19%", status: "paused" },
+        ]}
+        selectable
+        selected={selected}
+        onToggleSelect={toggleSelect}
+        onToggleAll={toggleAll}
+      />
     </div>
   );
 }

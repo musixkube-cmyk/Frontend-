@@ -1,57 +1,48 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { PageHeader, MetricCard, StatusBadge, DataTable, FilterBar, BulkActionToolbar, EmptyState, Button, TabBar, FormField, EstimatePanel, PolicyPanel, ActivityTimeline, CardGrid, StatusToggle } from "@/components/ads/ui";
 
-export default function Page() {
+const notifications = [
+          { id: "1", title: "Campaign budget depleted", type: "Issue", status: "active", date: "Aug 12, 2026" },
+          { id: "2", title: "New feature: AI Creative Studio", type: "Feature", status: "draft", date: "Aug 11, 2026" },
+          { id: "3", title: "Invoice INV-2026-08 ready", type: "Announcement", status: "completed", date: "Aug 10, 2026" },
+          { id: "4", title: "Policy violation on Ad #4321", type: "Issue", status: "rejected", date: "Aug 9, 2026" }
+];
+
+export default function NotificationCenterPage() {
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState("");
+  const toggleSelect = (id: string) => { const n = new Set(selected); n.has(id) ? n.delete(id) : n.add(id); setSelected(n); };
+  const toggleAll = () => { setSelected(selected.size === notifications.length ? new Set() : new Set(notifications.map((item: any) => item.id))); };
+
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Notifications</h1>
-          <p className="mt-1 text-sm text-neutral-500">Review and resolve account events.</p>
-        </div>
-        
-      </div>
+      <PageHeader title="Notification Center" description="View and manage all account notifications and alerts."  />
 
-      <div className="rounded-xl border border-neutral-100 bg-white">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-neutral-100 text-left text-xs font-medium uppercase tracking-wider text-neutral-400">
-              <th className="px-4 py-3">Type</th>
-              <th className="px-4 py-3">Message</th>
-              <th className="px-4 py-3">Time</th>
-              <th className="px-4 py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Issue</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Campaign budget exhausted</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">2 min ago</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Unresolved</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Announcement</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">New placement: Top Feed Video</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">1 hour ago</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Read</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Suggestion</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Increase budget on Summer Launch for 15% more reach</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">3 hours ago</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Pending</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Ticket</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Creative rejected — policy violation</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Yesterday</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Open</td>
-            </tr>
+      <FilterBar searchPlaceholder="Search notifications…" onSearch={setSearch} filters={[
+          { label: "Type", options: ["Issue", "Announcement", "Feature", "Ticket", "Promotion"] }
+      ]} />
 
-          </tbody>
-        </table>
-      </div>
+      <BulkActionToolbar selectedCount={selected.size} actions={[
+          { label: "Mark read", onClick: () => {} },
+          { label: "Dismiss", onClick: () => {}, variant: "danger" as const }
+      ]} />
+
+      <DataTable
+        columns={[
+          { key: "title", label: "Notification", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+          { key: "type", label: "Type" },
+          { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> },
+          { key: "date", label: "Date" }
+        ]}
+        data={notifications}
+        selectable
+        selected={selected}
+        onToggleSelect={toggleSelect}
+        onToggleAll={toggleAll}
+      />
     </div>
   );
 }

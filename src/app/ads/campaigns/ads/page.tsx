@@ -1,65 +1,52 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { PageHeader, MetricCard, StatusBadge, DataTable, FilterBar, BulkActionToolbar, EmptyState, Button, TabBar, FormField, EstimatePanel, PolicyPanel, ActivityTimeline, CardGrid, StatusToggle } from "@/components/ads/ui";
 
-export default function Page() {
+const ads = [
+          { id: "1", name: "Summer Audio Ad 1", campaign: "Summer Launch 2026", status: "active", type: "Audio", results: "340 clicks" },
+          { id: "2", name: "Summer Companion Banner", campaign: "Summer Launch 2026", status: "active", type: "Companion", results: "280 clicks" },
+          { id: "3", name: "Brand Push — Video", campaign: "Brand Awareness Push", status: "active", type: "Video", results: "22K impr." },
+          { id: "4", name: "Catalog Carousel Ad", campaign: "Catalog Carousel Test", status: "paused", type: "Carousel", results: "45 clicks" }
+];
+
+export default function AdsPage() {
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState("");
+  const toggleSelect = (id: string) => { const n = new Set(selected); n.has(id) ? n.delete(id) : n.add(id); setSelected(n); };
+  const toggleAll = () => { setSelected(selected.size === ads.length ? new Set() : new Set(ads.map((item: any) => item.id))); };
+
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Ads</h1>
-          <p className="mt-1 text-sm text-neutral-500">Manage individual ad creatives and their delivery.</p>
-        </div>
-                <Link
-          href="/ads/campaigns/create"
-          className="flex h-9 items-center gap-2 rounded-lg bg-neutral-900 px-4 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
-          Create Ad
-        </Link>
-      </div>
+      <PageHeader title="Ads" description="View and manage all ads across campaigns." actions={<Link href="/ads/campaigns/create"><Button>Create Ad</Button></Link>} />
 
-      <div className="rounded-xl border border-neutral-100 bg-white">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-neutral-100 text-left text-xs font-medium uppercase tracking-wider text-neutral-400">
-              <th className="px-4 py-3">Ad</th>
-              <th className="px-4 py-3">Ad Group</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Type</th>
-              <th className="px-4 py-3">Spend</th>
-              <th className="px-4 py-3">Results</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Summer Audio Spot</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Audio — Broad Audience</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Active</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Audio</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">$820</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">456 clicks</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Companion Banner</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Audio — Broad Audience</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Active</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Image</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">$700</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">386 clicks</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Video Retarget 15s</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Video — Retarget</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Active</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Video</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">$930</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">388 clicks</td>
-            </tr>
+      <FilterBar searchPlaceholder="Search ads…" onSearch={setSearch} filters={[
+          { label: "Status", options: ["Active", "Paused", "Draft"] },
+          { label: "Type", options: ["Audio", "Video", "Companion", "Carousel"] }
+      ]} />
 
-          </tbody>
-        </table>
-      </div>
+      <BulkActionToolbar selectedCount={selected.size} actions={[
+          { label: "Pause", onClick: () => {} },
+          { label: "Resume", onClick: () => {} },
+          { label: "Duplicate", onClick: () => {} },
+          { label: "Delete", onClick: () => {}, variant: "danger" as const }
+      ]} />
+
+      <DataTable
+        columns={[
+          { key: "name", label: "Ad", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+          { key: "campaign", label: "Campaign" },
+          { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> },
+          { key: "type", label: "Type" },
+          { key: "results", label: "Results" }
+        ]}
+        data={ads}
+        selectable
+        selected={selected}
+        onToggleSelect={toggleSelect}
+        onToggleAll={toggleAll}
+      />
     </div>
   );
 }

@@ -1,61 +1,45 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { PageHeader, MetricCard, StatusBadge, DataTable, FilterBar, BulkActionToolbar, EmptyState, Button, TabBar, FormField, EstimatePanel, PolicyPanel, ActivityTimeline, CardGrid, StatusToggle } from "@/components/ads/ui";
 
-export default function Page() {
+const forms = [
+          { id: "1", name: "Summer Lead Form", campaign: "Summer Launch 2026", submissions: "48", status: "active", created: "Jul 15, 2026" },
+          { id: "2", name: "Brand Interest Form", campaign: "Brand Awareness Push", submissions: "22", status: "active", created: "Aug 1, 2026" }
+];
+
+export default function InstantFormsPage() {
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState("");
+  const toggleSelect = (id: string) => { const n = new Set(selected); n.has(id) ? n.delete(id) : n.add(id); setSelected(n); };
+  const toggleAll = () => { setSelected(selected.size === forms.length ? new Set() : new Set(forms.map((item: any) => item.id))); };
+
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Instant Forms</h1>
-          <p className="mt-1 text-sm text-neutral-500">Create and manage lead generation forms.</p>
-        </div>
-                <Link
-          href="#"
-          className="flex h-9 items-center gap-2 rounded-lg bg-neutral-900 px-4 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
-          Create Form
-        </Link>
-      </div>
+      <PageHeader title="Instant Forms" description="Create and manage lead-generation forms." actions={<Link href="/ads/leads/instant-forms/create"><Button>Create Form</Button></Link>} />
 
-      <div className="rounded-xl border border-neutral-100 bg-white">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-neutral-100 text-left text-xs font-medium uppercase tracking-wider text-neutral-400">
-              <th className="px-4 py-3">Form</th>
-              <th className="px-4 py-3">Leads</th>
-              <th className="px-4 py-3">Conversion rate</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Last updated</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Summer Lead Form</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">234</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">8.2%</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Active</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 10, 2026</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Newsletter Signup</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">1,420</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">12.4%</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Active</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 1, 2026</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Demo Request</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">56</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">3.1%</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Paused</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Jul 15, 2026</td>
-            </tr>
+      <FilterBar searchPlaceholder="Search forms…" onSearch={setSearch} />
 
-          </tbody>
-        </table>
-      </div>
+      <BulkActionToolbar selectedCount={selected.size} actions={[
+          { label: "Preview", onClick: () => {} },
+          { label: "Delete", onClick: () => {}, variant: "danger" as const }
+      ]} />
+
+      <DataTable
+        columns={[
+          { key: "name", label: "Form", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+          { key: "campaign", label: "Campaign" },
+          { key: "submissions", label: "Submissions" },
+          { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> },
+          { key: "created", label: "Created" }
+        ]}
+        data={forms}
+        selectable
+        selected={selected}
+        onToggleSelect={toggleSelect}
+        onToggleAll={toggleAll}
+      />
     </div>
   );
 }

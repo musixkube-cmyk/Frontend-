@@ -1,30 +1,41 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { PageHeader, MetricCard, StatusBadge, DataTable, FilterBar, BulkActionToolbar, EmptyState, Button, TabBar, FormField, EstimatePanel, PolicyPanel, ActivityTimeline, CardGrid, StatusToggle } from "@/components/ads/ui";
 
-export default function Page() {
+export default function AdGroupDetailPage() {
+  const [tab, setTab] = useState(0);
+
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Ad Group Detail</h1>
-          <p className="mt-1 text-sm text-neutral-500">Configure targeting, placements, budget/bid, analytics, and frequency controls.</p>
+      <PageHeader title="Ad Group Detail" description="View and manage this ad group." />
+      <TabBar tabs={["Overview", "Audience", "Placements", "Delivery", "Analytics", "Activity"]} active={tab} onChange={setTab} />
+      {tab === 0 && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <MetricCard label="Budget" value="$50/day" />
+            <MetricCard label="Spend" value="$1,240" />
+            <MetricCard label="Results" value="620 clicks" />
+            <MetricCard label="CTR" value="1.8%" delta="+0.2%" deltaType="positive" />
+          </div>
         </div>
-      </div>
-      <div className="mb-6 flex gap-1 border-b border-neutral-200">
-        {["Targeting", "Placements", "Budget & Bid", "Analytics", "Frequency Controls"].map((tab, i) => (
-          <button key={tab} className={`px-4 py-2.5 text-sm font-medium transition-colors ${i === 0 ? "border-b-2 border-neutral-900 text-neutral-900" : "text-neutral-500 hover:text-neutral-700"}`}>{tab}</button>
-        ))}
-      </div>
-      <div className="rounded-xl border border-neutral-100 bg-white p-6">
-        <h3 className="text-sm font-semibold text-neutral-900 mb-4">Audience targeting</h3>
-        <div className="grid gap-4 lg:grid-cols-2">
-          <div><label className="block text-sm text-neutral-600 mb-1">Location</label><input defaultValue="United States" className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900" /></div>
-          <div><label className="block text-sm text-neutral-600 mb-1">Age</label><input defaultValue="18-55" className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900" /></div>
-          <div><label className="block text-sm text-neutral-600 mb-1">Gender</label><select className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900"><option>All</option><option>Male</option><option>Female</option></select></div>
-          <div><label className="block text-sm text-neutral-600 mb-1">Language</label><input defaultValue="English" className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900" /></div>
-        </div>
-      </div>
+      )},
+      {tab === 1 && (
+        <div className="rounded-xl border border-neutral-100 bg-white p-6"><p className="text-sm text-neutral-500">Audience content</p></div>
+      )},
+      {tab === 2 && (
+        <div className="rounded-xl border border-neutral-100 bg-white p-6"><p className="text-sm text-neutral-500">Placements content</p></div>
+      )},
+      {tab === 3 && (
+        <div className="rounded-xl border border-neutral-100 bg-white p-6"><p className="text-sm text-neutral-500">Delivery content</p></div>
+      )},
+      {tab === 4 && (
+        <div className="rounded-xl border border-neutral-100 bg-white p-6"><p className="text-sm text-neutral-500">Analytics content</p></div>
+      )},
+      {tab === 5 && (
+        <div className="rounded-xl border border-neutral-100 bg-white p-6"><p className="text-sm text-neutral-500">Activity content</p></div>
+      )}
     </div>
   );
 }

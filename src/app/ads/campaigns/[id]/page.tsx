@@ -40,7 +40,7 @@ export default function CampaignDetail({ params }: { params: Promise<{ id: strin
           <>
             <StatusToggle active={isActive} onToggle={() => setIsActive(!isActive)} />
             <Button variant="secondary">Duplicate</Button>
-            <Link href={`/ads/campaigns/${id}/edit`}><Button>Edit</Link></Link>
+            <Link href={`/ads/campaigns/${id}/edit`}><Button>Edit</Button></Link>
           </>
         }
       />

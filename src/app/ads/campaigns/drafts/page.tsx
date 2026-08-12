@@ -1,48 +1,44 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { PageHeader, MetricCard, StatusBadge, DataTable, FilterBar, BulkActionToolbar, EmptyState, Button, TabBar, FormField, EstimatePanel, PolicyPanel, ActivityTimeline, CardGrid, StatusToggle } from "@/components/ads/ui";
 
-export default function Page() {
+const drafts = [
+          { id: "1", name: "Artist Spotlight Q3", objective: "Consideration", status: "draft", modified: "Aug 10, 2026" },
+          { id: "2", name: "Holiday Promo 2026", objective: "Conversions", status: "draft", modified: "Aug 8, 2026" }
+];
+
+export default function DraftsPage() {
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState("");
+  const toggleSelect = (id: string) => { const n = new Set(selected); n.has(id) ? n.delete(id) : n.add(id); setSelected(n); };
+  const toggleAll = () => { setSelected(selected.size === drafts.length ? new Set() : new Set(drafts.map((item: any) => item.id))); };
+
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Drafts</h1>
-          <p className="mt-1 text-sm text-neutral-500">Resume incomplete campaign builds.</p>
-        </div>
-        
-      </div>
+      <PageHeader title="Drafts" description="Resume or discard campaign drafts."  />
 
-      <div className="rounded-xl border border-neutral-100 bg-white">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-neutral-100 text-left text-xs font-medium uppercase tracking-wider text-neutral-400">
-              <th className="px-4 py-3">Draft</th>
-              <th className="px-4 py-3">Objective</th>
-              <th className="px-4 py-3">Last edited</th>
-              <th className="px-4 py-3">Owner</th>
-              <th className="px-4 py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Artist Spotlight Q3</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Consideration</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 10, 2026</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">You</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">In progress</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Podcast Promo</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Awareness</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 8, 2026</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">You</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">In progress</td>
-            </tr>
+      <FilterBar searchPlaceholder="Search drafts…" onSearch={setSearch} />
 
-          </tbody>
-        </table>
-      </div>
+      <BulkActionToolbar selectedCount={selected.size} actions={[
+          { label: "Resume editing", onClick: () => {} },
+          { label: "Discard", onClick: () => {}, variant: "danger" as const }
+      ]} />
+
+      <DataTable
+        columns={[
+          { key: "name", label: "Draft", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+          { key: "objective", label: "Objective" },
+          { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> },
+          { key: "modified", label: "Modified" }
+        ]}
+        data={drafts}
+        selectable
+        selected={selected}
+        onToggleSelect={toggleSelect}
+        onToggleAll={toggleAll}
+      />
     </div>
   );
 }

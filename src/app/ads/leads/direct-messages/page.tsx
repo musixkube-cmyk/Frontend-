@@ -1,17 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { PageHeader, Button, TabBar, FormField, StatusToggle } from "@/components/ads/ui";
+import { useState } from "react";
 
-export default function Page() {
+export default function DirectMessagesPage() {
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Direct Messages</h1>
-          <p className="mt-1 text-sm text-neutral-500">Manage lead conversations via direct message.</p>
-        </div>
+      <PageHeader title="Direct Messages" description="Conversation-to-lead workspace for managing DM leads." />
+      <div className="rounded-xl border border-neutral-100 bg-white p-6">
+        <p className="text-sm text-neutral-500">Content for Direct Messages will appear here.</p>
       </div>
-
     </div>
   );
 }

@@ -1,55 +1,42 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { PageHeader, MetricCard, StatusBadge, DataTable, FilterBar, BulkActionToolbar, EmptyState, Button, TabBar, FormField, EstimatePanel, PolicyPanel, ActivityTimeline, CardGrid, StatusToggle } from "@/components/ads/ui";
 
-export default function Page() {
+const transactions = [
+          { id: "1", txn: "TXN-8924", type: "Charge", amount: "$120.00", date: "Aug 12, 2026", status: "active" },
+          { id: "2", txn: "TXN-8923", type: "Charge", amount: "$95.00", date: "Aug 11, 2026", status: "active" },
+          { id: "3", txn: "TXN-8922", type: "Refund", amount: "$15.00", date: "Aug 10, 2026", status: "completed" }
+];
+
+export default function TransactionsPage() {
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState("");
+  const toggleSelect = (id: string) => { const n = new Set(selected); n.has(id) ? n.delete(id) : n.add(id); setSelected(n); };
+  const toggleAll = () => { setSelected(selected.size === transactions.length ? new Set() : new Set(transactions.map((item: any) => item.id))); };
+
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Transactions</h1>
-          <p className="mt-1 text-sm text-neutral-500">Review payment history and billing events.</p>
-        </div>
-        
-      </div>
+      <PageHeader title="Transactions" description="Full transaction history for your account."  />
 
-      <div className="rounded-xl border border-neutral-100 bg-white">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-neutral-100 text-left text-xs font-medium uppercase tracking-wider text-neutral-400">
-              <th className="px-4 py-3">Transaction</th>
-              <th className="px-4 py-3">Type</th>
-              <th className="px-4 py-3">Amount</th>
-              <th className="px-4 py-3">Date</th>
-              <th className="px-4 py-3">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">TXN-8924</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Charge</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">$120.00</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 12, 2026</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Completed</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">TXN-8923</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Charge</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">$95.00</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 11, 2026</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Completed</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">TXN-8922</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Refund</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">$15.00</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 10, 2026</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Completed</td>
-            </tr>
+      <FilterBar searchPlaceholder="Search transactions…" onSearch={setSearch} />
 
-          </tbody>
-        </table>
-      </div>
+
+      <DataTable
+        columns={[
+          { key: "txn", label: "Transaction", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+          { key: "type", label: "Type" },
+          { key: "amount", label: "Amount" },
+          { key: "date", label: "Date" },
+          { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> }
+        ]}
+        data={transactions}
+        selectable
+        selected={selected}
+        onToggleSelect={toggleSelect}
+        onToggleAll={toggleAll}
+      />
     </div>
   );
 }

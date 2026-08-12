@@ -1,17 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { PageHeader, Button, TabBar, FormField, StatusToggle } from "@/components/ads/ui";
+import { useState } from "react";
 
-export default function Page() {
+export default function InboxPage() {
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Inbox</h1>
-          <p className="mt-1 text-sm text-neutral-500">Central inbox for all lead communications and conversations.</p>
-        </div>
+      <PageHeader title="Inbox" description="Unified conversation inbox with response and assignment workflows." />
+      <div className="rounded-xl border border-neutral-100 bg-white p-6">
+        <p className="text-sm text-neutral-500">Content for Inbox will appear here.</p>
       </div>
-
     </div>
   );
 }

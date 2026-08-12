@@ -1,45 +1,35 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { PageHeader, MetricCard, StatusBadge, DataTable, FilterBar, BulkActionToolbar, EmptyState, Button, TabBar, FormField, EstimatePanel, PolicyPanel, ActivityTimeline, CardGrid, StatusToggle } from "@/components/ads/ui";
 
-export default function Page() {
+export default function VerificationPage() {
+  const [tab, setTab] = useState(0);
+
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Verification</h1>
-        <p className="mt-1 text-sm text-neutral-500">Start or check the status of business verification.</p>
-      </div>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <Link
-            href="#"
-            className="rounded-xl border border-neutral-100 bg-white p-5 transition-colors hover:border-neutral-200 hover:bg-neutral-50"
-          >
-            <h3 className="text-sm font-semibold text-neutral-900">Start Verification</h3>
-            <p className="mt-1 text-xs text-neutral-500">Begin the business verification process</p>
-          </Link>
-          <Link
-            href="#"
-            className="rounded-xl border border-neutral-100 bg-white p-5 transition-colors hover:border-neutral-200 hover:bg-neutral-50"
-          >
-            <h3 className="text-sm font-semibold text-neutral-900">Verification Status</h3>
-            <p className="mt-1 text-xs text-neutral-500">Check current verification status</p>
-          </Link>
-          <Link
-            href="#"
-            className="rounded-xl border border-neutral-100 bg-white p-5 transition-colors hover:border-neutral-200 hover:bg-neutral-50"
-          >
-            <h3 className="text-sm font-semibold text-neutral-900">Creator Engagement</h3>
-            <p className="mt-1 text-xs text-neutral-500">Eligibility for creator engagement features</p>
-          </Link>
-          <Link
-            href="#"
-            className="rounded-xl border border-neutral-100 bg-white p-5 transition-colors hover:border-neutral-200 hover:bg-neutral-50"
-          >
-            <h3 className="text-sm font-semibold text-neutral-900">Creator Payment</h3>
-            <p className="mt-1 text-xs text-neutral-500">Eligibility for creator payment features</p>
-          </Link>
-
-      </div>
+      <PageHeader title="Verification" description="Business verification status and eligibility." />
+      <TabBar tabs={["Status", "Documents", "Start Verification"]} active={tab} onChange={setTab} />
+      {tab === 0 && (
+        <div className="space-y-3">
+          <div className="rounded-xl border border-neutral-100 bg-white p-5">
+            <h3 className="text-sm font-semibold text-neutral-900 mb-3">Verification status</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between"><span className="text-neutral-500">Business verification</span><StatusBadge status="active" /></div>
+              <div className="flex justify-between"><span className="text-neutral-500">Creator-engagement eligibility</span><StatusBadge status="active" /></div>
+              <div className="flex justify-between"><span className="text-neutral-500">Analytics eligibility</span><StatusBadge status="active" /></div>
+              <div className="flex justify-between"><span className="text-neutral-500">Creator-payment eligibility</span><StatusBadge status="pending_review" /></div>
+            </div>
+          </div>
+        </div>
+      )},
+      {tab === 1 && (
+        <div className="rounded-xl border border-neutral-100 bg-white p-6"><p className="text-sm text-neutral-500">Documents content</p></div>
+      )},
+      {tab === 2 && (
+        <div className="rounded-xl border border-neutral-100 bg-white p-6"><p className="text-sm text-neutral-500">Start Verification content</p></div>
+      )}
     </div>
   );
 }
