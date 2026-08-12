@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Logo } from "./Logo";
 
 const rails: {
   label: string;
@@ -71,9 +70,11 @@ export function BottomRail() {
 
         <div className="mt-12 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-t border-white/10 pt-6 sm:flex sm:justify-between">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="shrink-0 rounded-md bg-white px-2 py-1">
-              <Logo className="h-6" />
-            </span>
+            <img
+              src="/musicosy-orange-logo.webp"
+              alt="Musicosy"
+              className="h-7 w-auto object-contain"
+            />
             <p className="truncate text-xs text-ink-muted">
               Everything music. One place.
             </p>

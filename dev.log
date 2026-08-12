@@ -40,3 +40,8 @@ https://nextjs.org/telemetry
  GET /ads/measure/cross-media 200 in 1220ms (compile: 1202ms, render: 18ms)
 ✓ Compiled in 528ms
 ✓ Compiled in 298ms
+ GET / 200 in 75ms (compile: 9ms, render: 66ms)
+ GET / 200 in 33ms (compile: 1829µs, render: 31ms)
+ GET / 200 in 31ms (compile: 3ms, render: 29ms)
+⚠ Cross origin request detected from preview-chat-5a5bc2ce-9883-4618-afde-022d7022f0d0.space-z.ai to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
