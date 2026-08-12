@@ -32,6 +32,15 @@ const rails: {
     ],
   },
   {
+    label: "Podcast",
+    links: [
+      { label: "Podcast hub", to: "/podcast" },
+      { label: "Create a podcast", to: "/podcast/create" },
+      { label: "Podcast analytics", to: "/podcast/analytics" },
+      { label: "Podcast directory", to: "/podcast/directory" },
+    ],
+  },
+  {
     label: "Get on Musicosy",
     links: [
       { label: "Start onboarding", to: "/onboarding" },
@@ -46,7 +55,7 @@ export function BottomRail() {
   return (
     <footer className="mt-24 bg-ink text-ink-foreground">
       <div className="mx-auto w-full max-w-6xl px-6 py-14">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           {rails.map((rail) => (
             <nav key={rail.label} aria-label={rail.label}>
               <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">
