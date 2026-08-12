@@ -1,0 +1,210 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { useAuth } from "@/hooks/use-auth";
+
+/**
+ * ProfileDropdown — modern avatar dropdown with:
+ *   - User name, email, role
+ *   - Account switcher
+ *   - Settings link
+ *   - Sign Out action
+ *
+ * This is the ONLY place Settings and Sign Out appear in the UI.
+ * Triggered by clicking the avatar circle in the top bar.
+ */
+export function ProfileDropdown() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const { user, signOut, signingOut } = useAuth();
+
+  // Close on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    if (open) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  // Close on Escape
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    if (open) document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [open]);
+
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "…";
+
+  return (
+    <div className="relative" ref={ref}>
+      {/* Avatar trigger */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-semibold text-neutral-600 transition-colors hover:bg-neutral-300 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-1"
+        aria-haspopup="true"
+        aria-expanded={open}
+      >
+        {initials}
+      </button>
+
+      {/* Dropdown panel */}
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-72 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-lg z-50">
+          {/* User info header */}
+          <div className="px-4 py-3 border-b border-neutral-100">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-200 text-sm font-semibold text-neutral-600">
+                {initials}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-neutral-900">
+                  {user?.name || "Loading…"}
+                </p>
+                <p className="truncate text-xs text-neutral-500">
+                  {user?.email || ""}
+                </p>
+              </div>
+            </div>
+            <div className="mt-2 flex items-center gap-2">
+              <span className="inline-flex items-center rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium capitalize text-neutral-600">
+                {user?.role || "user"}
+              </span>
+              {user?.plan && (
+                <Link
+                  href="/ads/billing/plans"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-600 transition-colors hover:bg-neutral-200"
+                >
+                  {user.plan.label}
+                </Link>
+              )}
+            </div>
+          </div>
+
+          {/* Account section */}
+          <div className="px-2 py-2 border-b border-neutral-100">
+            <button className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-neutral-700 transition-colors hover:bg-neutral-50">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <span className="flex-1 text-left">{user?.accountName || "Account"}</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-400">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Navigation links */}
+          <div className="px-2 py-1.5">
+            <Link
+              href="/ads/settings/account"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-neutral-700 transition-colors hover:bg-neutral-50"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+              </svg>
+              Settings
+            </Link>
+
+            <Link
+              href="/ads/settings/team"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-neutral-700 transition-colors hover:bg-neutral-50"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+              Team & Permissions
+            </Link>
+
+            <Link
+              href="/ads/billing/plans"
+              onClick={() => setOpen(false)}
+              className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-neutral-700 transition-colors hover:bg-neutral-50"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" />
+                <path d="M1 10h22" />
+              </svg>
+              Subscription & Billing
+            </Link>
+          </div>
+
+          {/* Sign Out */}
+          <div className="border-t border-neutral-100 px-2 py-1.5">
+            <button
+              onClick={() => {
+                setOpen(false);
+                signOut();
+              }}
+              disabled={signingOut}
+              className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-neutral-700 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              {signingOut ? "Signing out…" : "Sign out"}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * SidebarProfile — compact user display at bottom of sidebar.
+ * Clicking it also opens the dropdown (via ProfileDropdown in top bar).
+ * This just shows the user info; the actual dropdown is in the top bar.
+ */
+export function SidebarProfile() {
+  const { user } = useAuth();
+
+  const initials = user?.name
+    ? user.name
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase()
+    : "…";
+
+  return (
+    <div className="border-t border-neutral-200 px-4 py-3">
+      <div className="flex items-center gap-3">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-semibold text-neutral-600">
+          {initials}
+        </div>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-neutral-900">
+            {user?.name || "Loading…"}
+          </p>
+          <p className="truncate text-xs text-neutral-400">
+            {user?.accountName || "Personal account"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

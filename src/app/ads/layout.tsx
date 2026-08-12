@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useMemo } from "react";
+import { ProfileDropdown, SidebarProfile } from "@/components/ads/profile-dropdown";
+import { useCurrentUser } from "@/hooks/use-auth";
 
 /* ─── Collapsible sidebar navigation tree ─── */
 const navTree = [
@@ -96,22 +98,6 @@ const navTree = [
       { label: "Taxes", href: "/ads/billing/taxes", icon: "percent" },
       { label: "Credits, Rebates & Promotions", href: "/ads/billing/credits", icon: "gift" },
       { label: "Billing Support", href: "/ads/billing/support", icon: "help" },
-    ],
-  },
-  {
-    label: "Settings",
-    icon: "settings",
-    children: [
-      { label: "Account & Business", href: "/ads/settings/account", icon: "building" },
-      { label: "Plan & Tier Status", href: "/ads/settings/tiers", icon: "wallet" },
-      { label: "Team & Permissions", href: "/ads/settings/team", icon: "users-cog" },
-      { label: "Verification", href: "/ads/settings/verification", icon: "check-circle" },
-      { label: "Customer Review", href: "/ads/settings/customer-review", icon: "check-circle" },
-      { label: "Documents", href: "/ads/settings/documents", icon: "file-text" },
-      { label: "Targeting Defaults", href: "/ads/settings/targeting-defaults", icon: "target" },
-      { label: "Notification Preferences", href: "/ads/settings/notifications", icon: "bell" },
-      { label: "API Access", href: "/ads/settings/api", icon: "code" },
-      { label: "Policies & Security", href: "/ads/settings/policies-security", icon: "lock" },
     ],
   },
   {
@@ -250,18 +236,8 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        {/* Profile */}
-        <div className="border-t border-neutral-200 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-semibold text-neutral-600">
-              A
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-neutral-900">Advertiser</p>
-              <p className="truncate text-xs text-neutral-400">Personal account</p>
-            </div>
-          </div>
-        </div>
+        {/* Profile — uses auth hook for real user data */}
+        <SidebarProfile />
       </aside>
 
       {/* ─── Right area: top bar + main ─── */}
@@ -269,23 +245,11 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
         {/* ─── Top Bar ─── */}
         <header className="flex h-14 shrink-0 items-center justify-between border-b border-neutral-200 bg-white px-5">
           <div className="flex items-center gap-3">
-            {/* Account Switcher */}
-            <button className="flex items-center gap-2 rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                <circle cx="12" cy="7" r="4" />
-              </svg>
-              My Advertiser Account
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
-            </button>
+            {/* Account Switcher — driven by auth state */}
+            <AccountSwitcher />
 
-            {/* Plan / Subscription Status */}
-            <Link href="/ads/billing/plans" className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-500 transition-colors hover:bg-neutral-50 hover:text-neutral-700">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="1" y="4" width="22" height="16" rx="2" /><path d="M1 10h22" />
-              </svg>
-              Social Scroll — Medium
-            </Link>
+            {/* Plan / Subscription Status — driven by auth state */}
+            <PlanBadge />
           </div>
 
           <div className="flex items-center gap-2">
@@ -331,10 +295,8 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
               <span className="absolute right-1 top-1 flex h-2 w-2 rounded-full bg-red-500" />
             </button>
 
-            {/* Profile */}
-            <button className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-semibold text-neutral-600 transition-colors hover:bg-neutral-300">
-              A
-            </button>
+            {/* Profile Dropdown — Settings + Sign Out live here */}
+            <ProfileDropdown />
           </div>
         </header>
 
@@ -364,6 +326,34 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
         </div>
       )}
     </div>
+  );
+}
+
+/* ─── Account Switcher — driven by auth state ─── */
+function AccountSwitcher() {
+  const { user } = useCurrentUser();
+  return (
+    <button className="flex items-center gap-2 rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+        <circle cx="12" cy="7" r="4" />
+      </svg>
+      {user?.accountName || "My Account"}
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
+    </button>
+  );
+}
+
+/* ─── Plan Badge — driven by auth state ─── */
+function PlanBadge() {
+  const { user } = useCurrentUser();
+  return (
+    <Link href="/ads/billing/plans" className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-500 transition-colors hover:bg-neutral-50 hover:text-neutral-700">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="1" y="4" width="22" height="16" rx="2" /><path d="M1 10h22" />
+      </svg>
+      {user?.plan?.label || "Free"}
+    </Link>
   );
 }
 

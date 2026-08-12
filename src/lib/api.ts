@@ -249,6 +249,186 @@ export const analyticsApi = {
     apiFetch<Record<string, KPI>>("/api/analytics/breakdown" + qs(params)),
 };
 
+/* ─── Auth API ─── */
+
+export interface AuthSession {
+  user: CurrentUser;
+  accessToken: string;
+  refreshToken: string;
+  expiresAt: string;
+}
+
+export interface CurrentUser {
+  id: string;
+  name: string;
+  email: string;
+  avatarUrl?: string;
+  role: "owner" | "admin" | "editor" | "viewer";
+  accountId: string;
+  accountName: string;
+  plan: {
+    tier: "starter" | "medium" | "pro" | "enterprise";
+    label: string;
+    status: "active" | "trial" | "past_due" | "canceled";
+  };
+  permissions: string[];
+  lastLoginAt: string;
+}
+
+export const authApi = {
+  /** Sign in with email/password — returns session tokens */
+  login: (data: { email: string; password: string }) =>
+    apiFetch<AuthSession>("/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  /** Sign out — invalidates server session */
+  logout: () =>
+    apiFetch<void>("/api/auth/logout", { method: "POST" }),
+
+  /** Get current authenticated user */
+  me: () =>
+    apiFetch<CurrentUser>("/api/auth/me"),
+
+  /** Refresh the access token */
+  refresh: (refreshToken: string) =>
+    apiFetch<{ accessToken: string; expiresAt: string }>("/api/auth/refresh", {
+      method: "POST",
+      body: JSON.stringify({ refreshToken }),
+    }),
+
+  /** Request a password reset email */
+  forgotPassword: (email: string) =>
+    apiFetch<void>("/api/auth/forgot-password", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }),
+
+  /** Reset password with token */
+  resetPassword: (data: { token: string; password: string }) =>
+    apiFetch<void>("/api/auth/reset-password", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  /** Switch active account (for multi-account users) */
+  switchAccount: (accountId: string) =>
+    apiFetch<AuthSession>("/api/auth/switch-account", {
+      method: "POST",
+      body: JSON.stringify({ accountId }),
+    }),
+};
+
+/* ─── Account API ─── */
+
+export interface Account {
+  id: string;
+  name: string;
+  type: "advertiser" | "agency" | "business";
+  status: "active" | "suspended" | "pending_verification";
+  currency: string;
+  timezone: string;
+  createdAt: string;
+}
+
+export const accountsApi = {
+  list: () => apiFetch<Account[]>("/api/accounts"),
+  get: (id: string) => apiFetch<Account>(`/api/accounts/${id}`),
+  update: (id: string, data: Partial<Account>) =>
+    apiFetch<Account>(`/api/accounts/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
+};
+
+/* ─── Team API ─── */
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+  role: "owner" | "admin" | "editor" | "viewer";
+  status: "active" | "pending" | "revoked";
+  lastActiveAt: string;
+  permissions: string[];
+}
+
+export const teamApi = {
+  list: () => apiFetch<TeamMember[]>("/api/team"),
+  get: (id: string) => apiFetch<TeamMember>(`/api/team/${id}`),
+  invite: (data: { email: string; role: string }) =>
+    apiFetch<TeamMember>("/api/team/invite", { method: "POST", body: JSON.stringify(data) }),
+  updateRole: (id: string, role: string) =>
+    apiFetch<TeamMember>(`/api/team/${id}/role`, { method: "PATCH", body: JSON.stringify({ role }) }),
+  revoke: (id: string) =>
+    apiFetch<void>(`/api/team/${id}`, { method: "DELETE" }),
+};
+
+/* ─── Webhooks / Crons / Triggers API ─── */
+
+export interface Webhook {
+  id: string;
+  url: string;
+  events: string[];
+  status: "active" | "disabled" | "failing";
+  secret: string;
+  createdAt: string;
+  lastDeliveryAt?: string;
+}
+
+export interface CronJob {
+  id: string;
+  name: string;
+  schedule: string;
+  action: string;
+  status: "active" | "paused" | "error";
+  lastRunAt?: string;
+  nextRunAt?: string;
+}
+
+export interface Trigger {
+  id: string;
+  name: string;
+  event: string;
+  conditions: Record<string, any>;
+  action: string;
+  status: "active" | "paused";
+}
+
+export const webhooksApi = {
+  list: () => apiFetch<Webhook[]>("/api/webhooks"),
+  create: (data: Partial<Webhook>) =>
+    apiFetch<Webhook>("/api/webhooks", { method: "POST", body: JSON.stringify(data) }),
+  update: (id: string, data: Partial<Webhook>) =>
+    apiFetch<Webhook>(`/api/webhooks/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
+  delete: (id: string) =>
+    apiFetch<void>(`/api/webhooks/${id}`, { method: "DELETE" }),
+  test: (id: string) =>
+    apiFetch<{ success: boolean; response: string }>(`/api/webhooks/${id}/test`, { method: "POST" }),
+};
+
+export const cronsApi = {
+  list: () => apiFetch<CronJob[]>("/api/crons"),
+  create: (data: Partial<CronJob>) =>
+    apiFetch<CronJob>("/api/crons", { method: "POST", body: JSON.stringify(data) }),
+  update: (id: string, data: Partial<CronJob>) =>
+    apiFetch<CronJob>(`/api/crons/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
+  pause: (id: string) =>
+    apiFetch<CronJob>(`/api/crons/${id}/pause`, { method: "POST" }),
+  resume: (id: string) =>
+    apiFetch<CronJob>(`/api/crons/${id}/resume`, { method: "POST" }),
+  delete: (id: string) =>
+    apiFetch<void>(`/api/crons/${id}`, { method: "DELETE" }),
+};
+
+export const triggersApi = {
+  list: () => apiFetch<Trigger[]>("/api/triggers"),
+  create: (data: Partial<Trigger>) =>
+    apiFetch<Trigger>("/api/triggers", { method: "POST", body: JSON.stringify(data) }),
+  update: (id: string, data: Partial<Trigger>) =>
+    apiFetch<Trigger>(`/api/triggers/${id}`, { method: "PATCH", body: JSON.stringify(data) }),
+  delete: (id: string) =>
+    apiFetch<void>(`/api/triggers/${id}`, { method: "DELETE" }),
+};
+
 /* ─── Helpers ─── */
 
 function qs(params?: Record<string, string | undefined>): string {
