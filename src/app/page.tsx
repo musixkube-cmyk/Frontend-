@@ -249,9 +249,9 @@ export default function Home() {
           </div>
           <div className="flex shrink-0 flex-col items-end pr-4">
             <img
-              src="/logo-full-same-row.png"
+              src="/musicosy-orange-logo.webp"
               alt="Musicosy"
-              className="h-40 w-auto object-contain"
+              className="h-36 w-auto object-contain"
             />
             <p className="mt-1 text-xs text-ink-muted">&copy; {new Date().getFullYear()} Musicosy</p>
           </div>
