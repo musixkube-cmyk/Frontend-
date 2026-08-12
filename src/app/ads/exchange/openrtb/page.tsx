@@ -1,8 +1,17 @@
-export default function OpenrtbPage() {
+"use client";
+
+import Link from "next/link";
+
+export default function Page() {
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold tracking-tight text-neutral-900">Openrtb</h1>
-      <p className="mt-2 text-sm text-neutral-500">This page is under construction.</p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Exchange — Openrtb</h1>
+          <p className="mt-1 text-sm text-neutral-500">Configure openrtb exchange settings.</p>
+        </div>
+      </div>
+
     </div>
   );
 }

@@ -1,8 +1,17 @@
-export default function ResumePage() {
+"use client";
+
+import Link from "next/link";
+
+export default function Page() {
   return (
     <div>
-      <h1 className="font-display text-2xl font-bold tracking-tight text-neutral-900">Resume</h1>
-      <p className="mt-2 text-sm text-neutral-500">This page is under construction.</p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Resume Campaign</h1>
+          <p className="mt-1 text-sm text-neutral-500">Resume delivery for this paused campaign.</p>
+        </div>
+      </div>
+
     </div>
   );
 }

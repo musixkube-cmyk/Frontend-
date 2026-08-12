@@ -1,0 +1,793 @@
+     1→"use client";
+     2→
+     3→import Link from "next/link";
+     4→import { usePathname } from "next/navigation";
+     5→import { useState } from "react";
+     6→
+     7→/* ─── Consolidated sidebar navigation ─── */
+     8→const navSections = [
+     9→  {
+    10→    label: "Overview",
+    11→    items: [
+    12→      { label: "Dashboard", href: "/ads", icon: "dashboard" },
+    13→      { label: "All Campaigns", href: "/ads/campaigns", icon: "campaigns" },
+    14→      { label: "Notifications", href: "/ads/notifications", icon: "bell" },
+    15→    ],
+    16→  },
+    17→  {
+    18→    label: "Campaigns",
+    19→    items: [
+    20→      { label: "All Campaigns", href: "/ads/campaigns", icon: "campaigns" },
+    21→      { label: "Ad Groups", href: "/ads/campaigns/groups", icon: "layers" },
+    22→      { label: "Ads", href: "/ads/campaigns/ads", icon: "ad" },
+    23→      { label: "Drafts", href: "/ads/campaigns/drafts", icon: "draft" },
+    24→      {
+    25→        label: "Create Campaign",
+    26→        href: "/ads/campaigns/create",
+    27→        icon: "plus-circle",
+    28→        primary: true,
+    29→      },
+    30→    ],
+    31→  },
+    32→  {
+    33→    label: "Assets",
+    34→    items: [
+    35→      {
+    36→        label: "Creative Library",
+    37→        href: "/ads/creatives/library",
+    38→        icon: "folder",
+    39→      },
+    40→      {
+    41→        label: "Creative Studio",
+    42→        href: "/ads/creatives/studio",
+    43→        icon: "palette",
+    44→      },
+    45→      { label: "Audiences", href: "/ads/audiences", icon: "users" },
+    46→      { label: "Catalogs", href: "/ads/catalog", icon: "catalog" },
+    47→      {
+    48→        label: "Placements & Inventory",
+    49→        href: "/ads/inventory",
+    50→        icon: "layout",
+    51→      },
+    52→    ],
+    53→  },
+    54→  {
+    55→    label: "Measure",
+    56→    items: [
+    57→      {
+    58→        label: "Analytics Overview",
+    59→        href: "/ads/analytics",
+    60→        icon: "chart",
+    61→      },
+    62→      { label: "Reports", href: "/ads/analytics/reports", icon: "report" },
+    63→      {
+    64→        label: "Attribution",
+    65→        href: "/ads/analytics/attribution",
+    66→        icon: "path",
+    67→      },
+    68→      {
+    69→        label: "Experiments",
+    70→        href: "/ads/analytics/experiments",
+    71→        icon: "flask",
+    72→      },
+    73→      {
+    74→        label: "Audience Insights",
+    75→        href: "/ads/analytics/audience-insights",
+    76→        icon: "insight",
+    77→      },
+    78→      {
+    79→        label: "Video & Audio Insights",
+    80→        href: "/ads/analytics/video-audio-insights",
+    81→        icon: "play-circle",
+    82→      },
+    83→    ],
+    84→  },
+    85→  {
+    86→    label: "Leads",
+    87→    items: [
+    88→      { label: "Leads Center", href: "/ads/leads", icon: "user-check" },
+    89→      {
+    90→        label: "Instant Forms",
+    91→        href: "/ads/leads/instant-forms",
+    92→        icon: "file-text",
+    93→      },
+    94→      {
+    95→        label: "Direct Messages",
+    96→        href: "/ads/leads/direct-messages",
+    97→        icon: "message",
+    98→      },
+    99→      { label: "Inbox", href: "/ads/leads/inbox", icon: "inbox" },
+   100→      {
+   101→        label: "CRM Integrations",
+   102→        href: "/ads/leads/crm",
+   103→        icon: "link",
+   104→      },
+   105→    ],
+   106→  },
+   107→  {
+   108→    label: "Manage",
+   109→    items: [
+   110→      { label: "Events Manager", href: "/ads/events", icon: "calendar" },
+   111→      { label: "Automated Rules", href: "/ads/rules", icon: "zap" },
+   112→      {
+   113→        label: "Comments Manager",
+   114→        href: "/ads/comments",
+   115→        icon: "message-square",
+   116→      },
+   117→      {
+   118→        label: "Brand Safety",
+   119→        href: "/ads/brand-safety",
+   120→        icon: "shield",
+   121→      },
+   122→      {
+   123→        label: "Integrations",
+   124→        href: "/ads/integrations",
+   125→        icon: "puzzle",
+   126→      },
+   127→      { label: "AI Skills & MCP", href: "/ads/ai/skills", icon: "sparkles" },
+   128→    ],
+   129→  },
+   130→  {
+   131→    label: "Billing",
+   132→    items: [
+   133→      { label: "Overview", href: "/ads/billing", icon: "credit-card" },
+   134→      {
+   135→        label: "Payment Methods",
+   136→        href: "/ads/billing/payment-methods",
+   137→        icon: "wallet",
+   138→      },
+   139→      { label: "Invoices", href: "/ads/billing/invoices", icon: "receipt" },
+   140→      {
+   141→        label: "Transactions",
+   142→        href: "/ads/billing/transactions",
+   143→        icon: "arrow-left-right",
+   144→      },
+   145→      { label: "Taxes", href: "/ads/billing/tax", icon: "percent" },
+   146→      {
+   147→        label: "Credits & Promotions",
+   148→        href: "/ads/billing/credits",
+   149→        icon: "gift",
+   150→      },
+   151→    ],
+   152→  },
+   153→  {
+   154→    label: "Settings",
+   155→    items: [
+   156→      {
+   157→        label: "Account & Business",
+   158→        href: "/ads/settings/account",
+   159→        icon: "building",
+   160→      },
+   161→      {
+   162→        label: "Team & Permissions",
+   163→        href: "/ads/settings/team",
+   164→        icon: "users-cog",
+   165→      },
+   166→      {
+   167→        label: "Verification",
+   168→        href: "/ads/settings/verification",
+   169→        icon: "check-circle",
+   170→      },
+   171→      {
+   172→        label: "Security & Documents",
+   173→        href: "/ads/settings/security",
+   174→        icon: "lock",
+   175→      },
+   176→      {
+   177→        label: "Notification Preferences",
+   178→        href: "/ads/settings/notifications",
+   179→        icon: "bell",
+   180→      },
+   181→      {
+   182→        label: "Targeting Defaults",
+   183→        href: "/ads/settings/targeting-defaults",
+   184→        icon: "target",
+   185→      },
+   186→      { label: "API Access", href: "/ads/settings/api", icon: "code" },
+   187→    ],
+   188→  },
+   189→];
+   190→
+   191→export default function AdsLayout({ children }: { children: React.ReactNode }) {
+   192→  const pathname = usePathname();
+   193→  const [searchOpen, setSearchOpen] = useState(false);
+   194→  const [notifOpen, setNotifOpen] = useState(false);
+   195→
+   196→  return (
+   197→    <div className="flex h-screen bg-white text-neutral-900">
+   198→      {/* ─── Left Sidebar ─── */}
+   199→      <aside className="flex w-60 shrink-0 flex-col border-r border-neutral-200 bg-white">
+   200→        {/* Logo / Ad Center */}
+   201→        <div className="flex h-14 items-center gap-2 border-b border-neutral-200 px-5">
+   202→          <img
+   203→            src="/musicosy-orange-logo.webp"
+   204→            alt="Musicosy"
+   205→            className="h-7 w-auto object-contain"
+   206→          />
+   207→          <span className="text-sm font-semibold text-neutral-900">
+   208→            Ad Center
+   209→          </span>
+   210→        </div>
+   211→
+   212→        {/* Nav sections */}
+   213→        <nav className="flex-1 overflow-y-auto px-3 py-2">
+   214→          {navSections.map((section) => (
+   215→            <div key={section.label} className="mb-1">
+   216→              <p className="mb-1 px-2 text-[10px] font-semibold uppercase tracking-widest text-neutral-400">
+   217→                {section.label}
+   218→              </p>
+   219→              {section.items.map((item) => {
+   220→                const isActive =
+   221→                  pathname === item.href ||
+   222→                  (item.href !== "/ads" && pathname.startsWith(item.href));
+   223→                return (
+   224→                  <Link
+   225→                    key={item.href + item.label}
+   226→                    href={item.href}
+   227→                    className={`flex items-center gap-2.5 rounded-lg px-2 py-[7px] text-[13px] transition-colors ${
+   228→                      item.primary
+   229→                        ? "font-semibold text-neutral-900 hover:bg-neutral-100"
+   230→                        : isActive
+   231→                          ? "bg-neutral-100 font-medium text-neutral-900"
+   232→                          : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
+   233→                    }`}
+   234→                  >
+   235→                    <SidebarIcon
+   236→                      type={item.icon}
+   237→                      active={isActive}
+   238→                      primary={item.primary}
+   239→                    />
+   240→                    {item.label}
+   241→                    {item.primary && (
+   242→                      <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-neutral-900 text-[10px] font-bold text-white">
+   243→                        +
+   244→                      </span>
+   245→                    )}
+   246→                  </Link>
+   247→                );
+   248→              })}
+   249→            </div>
+   250→          ))}
+   251→        </nav>
+   252→
+   253→        {/* Profile */}
+   254→        <div className="border-t border-neutral-200 px-4 py-3">
+   255→          <div className="flex items-center gap-3">
+   256→            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-semibold text-neutral-600">
+   257→              A
+   258→            </div>
+   259→            <div className="min-w-0 flex-1">
+   260→              <p className="truncate text-sm font-medium text-neutral-900">
+   261→                Advertiser
+   262→              </p>
+   263→              <p className="truncate text-xs text-neutral-400">
+   264→                Personal account
+   265→              </p>
+   266→            </div>
+   267→          </div>
+   268→        </div>
+   269→      </aside>
+   270→
+   271→      {/* ─── Right area: top bar + main ─── */}
+   272→      <div className="flex flex-1 flex-col overflow-hidden">
+   273→        {/* ─── Top Bar ─── */}
+   274→        <header className="flex h-14 shrink-0 items-center justify-between border-b border-neutral-200 bg-white px-5">
+   275→          <div className="flex items-center gap-3">
+   276→            {/* Account Switcher */}
+   277→            <button className="flex items-center gap-2 rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50">
+   278→              <svg
+   279→                width="16"
+   280→                height="16"
+   281→                viewBox="0 0 24 24"
+   282→                fill="none"
+   283→                stroke="currentColor"
+   284→                strokeWidth="1.5"
+   285→                strokeLinecap="round"
+   286→                strokeLinejoin="round"
+   287→              >
+   288→                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+   289→                <circle cx="12" cy="7" r="4" />
+   290→              </svg>
+   291→              My Advertiser Account
+   292→              <svg
+   293→                width="12"
+   294→                height="12"
+   295→                viewBox="0 0 24 24"
+   296→                fill="none"
+   297→                stroke="currentColor"
+   298→                strokeWidth="2"
+   299→              >
+   300→                <path d="M6 9l6 6 6-6" />
+   301→              </svg>
+   302→            </button>
+   303→          </div>
+   304→
+   305→          <div className="flex items-center gap-2">
+   306→            {/* Global Search */}
+   307→            <button
+   308→              onClick={() => setSearchOpen(!searchOpen)}
+   309→              className="flex items-center gap-2 rounded-lg border border-neutral-200 px-3 py-1.5 text-sm text-neutral-400 transition-colors hover:bg-neutral-50 hover:text-neutral-600"
+   310→            >
+   311→              <svg
+   312→                width="15"
+   313→                height="15"
+   314→                viewBox="0 0 24 24"
+   315→                fill="none"
+   316→                stroke="currentColor"
+   317→                strokeWidth="1.5"
+   318→                strokeLinecap="round"
+   319→                strokeLinejoin="round"
+   320→              >
+   321→                <circle cx="11" cy="11" r="8" />
+   322→                <path d="M21 21l-4.35-4.35" />
+   323→              </svg>
+   324→              Search…
+   325→              <kbd className="ml-4 rounded border border-neutral-200 px-1.5 py-0.5 text-[10px] font-medium text-neutral-400">
+   326→                ⌘K
+   327→              </kbd>
+   328→            </button>
+   329→
+   330→            {/* Date Range */}
+   331→            <button className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-sm text-neutral-600 transition-colors hover:bg-neutral-50">
+   332→              <svg
+   333→                width="14"
+   334→                height="14"
+   335→                viewBox="0 0 24 24"
+   336→                fill="none"
+   337→                stroke="currentColor"
+   338→                strokeWidth="1.5"
+   339→                strokeLinecap="round"
+   340→                strokeLinejoin="round"
+   341→              >
+   342→                <rect x="3" y="4" width="18" height="18" rx="2" />
+   343→                <line x1="16" y1="2" x2="16" y2="6" />
+   344→                <line x1="8" y1="2" x2="8" y2="6" />
+   345→                <line x1="3" y1="10" x2="21" y2="10" />
+   346→              </svg>
+   347→              Last 30 days
+   348→            </button>
+   349→
+   350→            {/* Help */}
+   351→            <button className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-50 hover:text-neutral-600">
+   352→              <svg
+   353→                width="16"
+   354→                height="16"
+   355→                viewBox="0 0 24 24"
+   356→                fill="none"
+   357→                stroke="currentColor"
+   358→                strokeWidth="1.5"
+   359→                strokeLinecap="round"
+   360→                strokeLinejoin="round"
+   361→              >
+   362→                <circle cx="12" cy="12" r="10" />
+   363→                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+   364→                <line x1="12" y1="17" x2="12.01" y2="17" />
+   365→              </svg>
+   366→            </button>
+   367→
+   368→            {/* Notifications */}
+   369→            <button
+   370→              onClick={() => setNotifOpen(!notifOpen)}
+   371→              className="relative flex h-8 w-8 items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-50 hover:text-neutral-600"
+   372→            >
+   373→              <svg
+   374→                width="16"
+   375→                height="16"
+   376→                viewBox="0 0 24 24"
+   377→                fill="none"
+   378→                stroke="currentColor"
+   379→                strokeWidth="1.5"
+   380→                strokeLinecap="round"
+   381→                strokeLinejoin="round"
+   382→              >
+   383→                <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+   384→                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+   385→              </svg>
+   386→              <span className="absolute right-1 top-1 flex h-2 w-2 rounded-full bg-red-500" />
+   387→            </button>
+   388→
+   389→            {/* Profile menu */}
+   390→            <button className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-xs font-semibold text-neutral-600 transition-colors hover:bg-neutral-300">
+   391→              A
+   392→            </button>
+   393→          </div>
+   394→        </header>
+   395→
+   396→        {/* ─── Main Content ─── */}
+   397→        <main className="flex-1 overflow-y-auto bg-neutral-50/50 p-6">
+   398→          {children}
+   399→        </main>
+   400→      </div>
+   401→
+   402→      {/* ─── Notification Drawer ─── */}
+   403→      {notifOpen && (
+   404→        <div className="fixed inset-0 z-50 flex justify-end">
+   405→          <div
+   406→            className="absolute inset-0 bg-black/20"
+   407→            onClick={() => setNotifOpen(false)}
+   408→          />
+   409→          <div className="relative w-96 shrink-0 border-l border-neutral-200 bg-white shadow-xl">
+   410→            <div className="flex h-14 items-center justify-between border-b border-neutral-200 px-5">
+   411→              <h3 className="text-sm font-semibold text-neutral-900">
+   412→                Notifications
+   413→              </h3>
+   414→              <button
+   415→                onClick={() => setNotifOpen(false)}
+   416→                className="text-neutral-400 hover:text-neutral-600"
+   417→              >
+   418→                <svg
+   419→                  width="16"
+   420→                  height="16"
+   421→                  viewBox="0 0 24 24"
+   422→                  fill="none"
+   423→                  stroke="currentColor"
+   424→                  strokeWidth="2"
+   425→                >
+   426→                  <path d="M18 6L6 18M6 6l12 12" />
+   427→                </svg>
+   428→              </button>
+   429→            </div>
+   430→            <div className="p-4">
+   431→              {["Issues", "Announcements", "Suggestions", "Tickets", "Asset Sync", "Events", "Features", "Promotions"].map(
+   432→                (tab) => (
+   433→                  <div
+   434→                    key={tab}
+   435→                    className="rounded-lg border border-neutral-100 bg-neutral-50 p-3 text-sm text-neutral-600 mb-2"
+   436→                  >
+   437→                    No {tab.toLowerCase()} notifications
+   438→                  </div>
+   439→                )
+   440→              )}
+   441→            </div>
+   442→          </div>
+   443→        </div>
+   444→      )}
+   445→    </div>
+   446→  );
+   447→}
+   448→
+   449→/* ─── Sidebar Icons ─── */
+   450→function SidebarIcon({
+   451→  type,
+   452→  active,
+   453→  primary,
+   454→}: {
+   455→  type: string;
+   456→  active?: boolean;
+   457→  primary?: boolean;
+   458→}) {
+   459→  const p: React.SVGProps<SVGSVGElement> = {
+   460→    width: 16,
+   461→    height: 16,
+   462→    viewBox: "0 0 24 24",
+   463→    fill: "none",
+   464→    stroke: "currentColor",
+   465→    strokeWidth: 1.5,
+   466→    strokeLinecap: "round" as const,
+   467→    strokeLinejoin: "round" as const,
+   468→  };
+   469→  switch (type) {
+   470→    case "dashboard":
+   471→      return (
+   472→        <svg {...p}>
+   473→          <rect x="3" y="3" width="7" height="7" rx="1" />
+   474→          <rect x="14" y="3" width="7" height="7" rx="1" />
+   475→          <rect x="3" y="14" width="7" height="7" rx="1" />
+   476→          <rect x="14" y="14" width="7" height="7" rx="1" />
+   477→        </svg>
+   478→      );
+   479→    case "campaigns":
+   480→      return (
+   481→        <svg {...p}>
+   482→          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+   483→          <path d="M2 17l10 5 10-5" />
+   484→          <path d="M2 12l10 5 10-5" />
+   485→        </svg>
+   486→      );
+   487→    case "layers":
+   488→      return (
+   489→        <svg {...p}>
+   490→          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+   491→          <path d="M2 17l10 5 10-5" />
+   492→        </svg>
+   493→      );
+   494→    case "ad":
+   495→      return (
+   496→        <svg {...p}>
+   497→          <rect x="2" y="3" width="20" height="14" rx="2" />
+   498→          <path d="M8 21h8" />
+   499→          <path d="M12 17v4" />
+   500→        </svg>
+   501→      );
+   502→    case "draft":
+   503→      return (
+   504→        <svg {...p}>
+   505→          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+   506→          <polyline points="14 2 14 8 20 8" />
+   507→          <line x1="16" y1="13" x2="8" y2="13" />
+   508→          <line x1="16" y1="17" x2="8" y2="17" />
+   509→        </svg>
+   510→      );
+   511→    case "plus-circle":
+   512→      return (
+   513→        <svg {...p}>
+   514→          <circle cx="12" cy="12" r="10" />
+   515→          <path d="M12 8v8M8 12h8" />
+   516→        </svg>
+   517→      );
+   518→    case "folder":
+   519→      return (
+   520→        <svg {...p}>
+   521→          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+   522→        </svg>
+   523→      );
+   524→    case "palette":
+   525→      return (
+   526→        <svg {...p}>
+   527→          <circle cx="13.5" cy="6.5" r="2.5" />
+   528→          <circle cx="6" cy="12" r="2.5" />
+   529→          <circle cx="18" cy="12" r="2.5" />
+   530→          <circle cx="8.5" cy="18.5" r="2.5" />
+   531→          <circle cx="15.5" cy="18.5" r="2.5" />
+   532→        </svg>
+   533→      );
+   534→    case "users":
+   535→      return (
+   536→        <svg {...p}>
+   537→          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+   538→          <circle cx="9" cy="7" r="4" />
+   539→          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+   540→          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+   541→        </svg>
+   542→      );
+   543→    case "catalog":
+   544→      return (
+   545→        <svg {...p}>
+   546→          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+   547→          <line x1="3" y1="6" x2="21" y2="6" />
+   548→          <path d="M16 10a4 4 0 0 1-8 0" />
+   549→        </svg>
+   550→      );
+   551→    case "layout":
+   552→      return (
+   553→        <svg {...p}>
+   554→          <rect x="3" y="3" width="18" height="18" rx="2" />
+   555→          <line x1="3" y1="9" x2="21" y2="9" />
+   556→          <line x1="9" y1="9" x2="9" y2="21" />
+   557→        </svg>
+   558→      );
+   559→    case "chart":
+   560→      return (
+   561→        <svg {...p}>
+   562→          <path d="M3 3v18h18" />
+   563→          <path d="M7 16l4-4 4 4 5-5" />
+   564→        </svg>
+   565→      );
+   566→    case "report":
+   567→      return (
+   568→        <svg {...p}>
+   569→          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+   570→          <polyline points="14 2 14 8 20 8" />
+   571→          <line x1="16" y1="13" x2="8" y2="13" />
+   572→          <line x1="16" y1="17" x2="8" y2="17" />
+   573→        </svg>
+   574→      );
+   575→    case "path":
+   576→      return (
+   577→        <svg {...p}>
+   578→          <circle cx="5" cy="6" r="3" />
+   579→          <circle cx="19" cy="18" r="3" />
+   580→          <path d="M15 9l-3-3 3-3" />
+   581→          <path d="M9 15l3 3-3 3" />
+   582→          <path d="M8 9h8" />
+   583→          <path d="M16 15H8" />
+   584→        </svg>
+   585→      );
+   586→    case "flask":
+   587→      return (
+   588→        <svg {...p}>
+   589→          <path d="M9 3h6" />
+   590→          <path d="M10 9V3h4v6l5 8.5a2 2 0 0 1-1.73 3H6.73a2 2 0 0 1-1.73-3L10 9z" />
+   591→        </svg>
+   592→      );
+   593→    case "insight":
+   594→      return (
+   595→        <svg {...p}>
+   596→          <circle cx="12" cy="12" r="10" />
+   597→          <path d="M12 16v-4" />
+   598→          <path d="M12 8h.01" />
+   599→        </svg>
+   600→      );
+   601→    case "play-circle":
+   602→      return (
+   603→        <svg {...p}>
+   604→          <circle cx="12" cy="12" r="10" />
+   605→          <polygon points="10 8 16 12 10 16 10 8" />
+   606→        </svg>
+   607→      );
+   608→    case "user-check":
+   609→      return (
+   610→        <svg {...p}>
+   611→          <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+   612→          <circle cx="8.5" cy="7" r="4" />
+   613→          <polyline points="17 11 19 13 23 9" />
+   614→        </svg>
+   615→      );
+   616→    case "file-text":
+   617→      return (
+   618→        <svg {...p}>
+   619→          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+   620→          <polyline points="14 2 14 8 20 8" />
+   621→          <line x1="16" y1="13" x2="8" y2="13" />
+   622→          <line x1="16" y1="17" x2="8" y2="17" />
+   623→        </svg>
+   624→      );
+   625→    case "message":
+   626→      return (
+   627→        <svg {...p}>
+   628→          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+   629→        </svg>
+   630→      );
+   631→    case "inbox":
+   632→      return (
+   633→        <svg {...p}>
+   634→          <polyline points="22 12 18 12 15 15 9 15 6 12 2 12" />
+   635→          <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+   636→        </svg>
+   637→      );
+   638→    case "link":
+   639→      return (
+   640→        <svg {...p}>
+   641→          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+   642→          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+   643→        </svg>
+   644→      );
+   645→    case "calendar":
+   646→      return (
+   647→        <svg {...p}>
+   648→          <rect x="3" y="4" width="18" height="18" rx="2" />
+   649→          <line x1="16" y1="2" x2="16" y2="6" />
+   650→          <line x1="8" y1="2" x2="8" y2="6" />
+   651→          <line x1="3" y1="10" x2="21" y2="10" />
+   652→        </svg>
+   653→      );
+   654→    case "zap":
+   655→      return (
+   656→        <svg {...p}>
+   657→          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+   658→        </svg>
+   659→      );
+   660→    case "message-square":
+   661→      return (
+   662→        <svg {...p}>
+   663→          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+   664→        </svg>
+   665→      );
+   666→    case "shield":
+   667→      return (
+   668→        <svg {...p}>
+   669→          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+   670→        </svg>
+   671→      );
+   672→    case "puzzle":
+   673→      return (
+   674→        <svg {...p}>
+   675→          <path d="M16 3h5v5M4 21h5v-5M21 8l-9 9M8 4l-4 4" />
+   676→        </svg>
+   677→      );
+   678→    case "sparkles":
+   679→      return (
+   680→        <svg {...p}>
+   681→          <path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z" />
+   682→        </svg>
+   683→      );
+   684→    case "credit-card":
+   685→      return (
+   686→        <svg {...p}>
+   687→          <rect x="1" y="4" width="22" height="16" rx="2" />
+   688→          <path d="M1 10h22" />
+   689→        </svg>
+   690→      );
+   691→    case "wallet":
+   692→      return (
+   693→        <svg {...p}>
+   694→          <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" />
+   695→          <path d="M4 6v12a2 2 0 0 0 2 2h14v-4" />
+   696→          <path d="M18 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4z" />
+   697→        </svg>
+   698→      );
+   699→    case "receipt":
+   700→      return (
+   701→        <svg {...p}>
+   702→          <path d="M4 2v20l3-2 3 2 3-2 3 2 3-2 3 2V2l-3 2-3-2-3 2-3-2-3 2-3-2z" />
+   703→        </svg>
+   704→      );
+   705→    case "arrow-left-right":
+   706→      return (
+   707→        <svg {...p}>
+   708→          <path d="M17 1l4 4-4 4" />
+   709→          <path d="M3 5h18" />
+   710→          <path d="M7 23l-4-4 4-4" />
+   711→          <path d="M21 19H3" />
+   712→        </svg>
+   713→      );
+   714→    case "percent":
+   715→      return (
+   716→        <svg {...p}>
+   717→          <line x1="19" y1="5" x2="5" y2="19" />
+   718→          <circle cx="6.5" cy="6.5" r="2.5" />
+   719→          <circle cx="17.5" cy="17.5" r="2.5" />
+   720→        </svg>
+   721→      );
+   722→    case "gift":
+   723→      return (
+   724→        <svg {...p}>
+   725→          <polyline points="20 12 20 22 4 22 4 12" />
+   726→          <rect x="2" y="7" width="20" height="5" />
+   727→          <line x1="12" y1="22" x2="12" y2="7" />
+   728→          <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+   729→          <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+   730→        </svg>
+   731→      );
+   732→    case "bell":
+   733→      return (
+   734→        <svg {...p}>
+   735→          <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+   736→          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+   737→        </svg>
+   738→      );
+   739→    case "building":
+   740→      return (
+   741→        <svg {...p}>
+   742→          <rect x="4" y="2" width="16" height="20" rx="2" />
+   743→          <path d="M9 22v-4h6v4" />
+   744→          <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01" />
+   745→        </svg>
+   746→      );
+   747→    case "users-cog":
+   748→      return (
+   749→        <svg {...p}>
+   750→          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+   751→          <circle cx="9" cy="7" r="4" />
+   752→          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+   753→          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+   754→        </svg>
+   755→      );
+   756→    case "check-circle":
+   757→      return (
+   758→        <svg {...p}>
+   759→          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+   760→          <polyline points="22 4 12 14.01 9 11.01" />
+   761→        </svg>
+   762→      );
+   763→    case "lock":
+   764→      return (
+   765→        <svg {...p}>
+   766→          <rect x="3" y="11" width="18" height="11" rx="2" />
+   767→          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+   768→        </svg>
+   769→      );
+   770→    case "target":
+   771→      return (
+   772→        <svg {...p}>
+   773→          <circle cx="12" cy="12" r="10" />
+   774→          <circle cx="12" cy="12" r="6" />
+   775→          <circle cx="12" cy="12" r="2" />
+   776→        </svg>
+   777→      );
+   778→    case "code":
+   779→      return (
+   780→        <svg {...p}>
+   781→          <polyline points="16 18 22 12 16 6" />
+   782→          <polyline points="8 6 2 12 8 18" />
+   783→        </svg>
+   784→      );
+   785→    default:
+   786→      return (
+   787→        <svg {...p}>
+   788→          <circle cx="12" cy="12" r="1" />
+   789→        </svg>
+   790→      );
+   791→  }
+   792→}
+   793→
