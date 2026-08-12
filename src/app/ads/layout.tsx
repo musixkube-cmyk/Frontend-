@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useMemo } from "react";
-import { ProfileDropdown, SidebarProfile } from "@/components/ads/profile-dropdown";
-import { useCurrentUser } from "@/hooks/use-auth";
+import { TopBar } from "@/components/ads/top-bar";
+import { ContextualRightRail } from "@/components/ads/right-rail";
+import { SidebarProfile } from "@/components/ads/profile-dropdown";
 
 /* ─── Collapsible sidebar navigation tree — matches spec exactly ─── */
 const navTree = [
@@ -120,18 +121,24 @@ const navTree = [
   },
 ];
 
+/** Routes where the contextual Right Rail should be visible */
+const RIGHT_RAIL_ROUTES = [
+  "/ads/ads-manager/campaigns/create",
+  "/ads/campaigns/create",
+  "/ads/campaign/create",
+];
+
 export default function AdsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [notifOpen, setNotifOpen] = useState(false);
 
-  /* Auto-expand the section that contains the current route */
+  /* Auto-expand the section which contains the current route */
   const expandedByDefault = useMemo(() => {
     const idx = navTree.findIndex((s) =>
       s.children.some(
         (c) => pathname === c.href || (c.href !== "/ads" && pathname.startsWith(c.href))
       )
     );
-    return idx >= 0 ? idx : 0; // default to Overview
+    return idx >= 0 ? idx : 0;
   }, [pathname]);
 
   const [expanded, setExpanded] = useState<number>(expandedByDefault);
@@ -144,6 +151,11 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
   function toggleSection(idx: number) {
     setExpanded(expanded === idx ? -1 : idx);
   }
+
+  /* Determine if Right Rail should be shown for this route */
+  const showRightRail = RIGHT_RAIL_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(route + "/")
+  );
 
   return (
     <div className="flex h-screen bg-white text-neutral-900">
@@ -180,7 +192,6 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
             );
             return (
               <div key={section.label} className="mb-0.5">
-                {/* Section header — clickable to expand/collapse */}
                 <button
                   onClick={() => toggleSection(idx)}
                   className={`flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-[13px] font-medium transition-colors ${
@@ -192,33 +203,18 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
                   <SidebarIcon type={section.icon} size={16} />
                   <span className="flex-1 text-left">{section.label}</span>
                   <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className={`text-neutral-400 transition-transform duration-200 ${
-                      isExpanded ? "rotate-90" : ""
-                    }`}
+                    width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                    className={`text-neutral-400 transition-transform duration-200 ${isExpanded ? "rotate-90" : ""}`}
                   >
                     <path d="M9 18l6-6-6-6" />
                   </svg>
                 </button>
 
-                {/* Children — only rendered when expanded */}
-                <div
-                  className={`overflow-hidden transition-all duration-200 ${
-                    isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                  }`}
-                >
+                <div className={`overflow-hidden transition-all duration-200 ${isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
                   <div className="ml-4 border-l border-neutral-200 py-0.5">
                     {section.children.map((child) => {
-                      const childActive =
-                        pathname === child.href ||
-                        (child.href !== "/ads" && pathname.startsWith(child.href));
+                      const childActive = pathname === child.href || (child.href !== "/ads" && pathname.startsWith(child.href));
                       return (
                         <Link
                           key={child.href + child.label}
@@ -243,138 +239,32 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
-        {/* Profile — uses auth hook for real user data */}
+        {/* Profile */}
         <SidebarProfile />
       </aside>
 
-      {/* ─── Right area: top bar + main ─── */}
+      {/* ─── Right area: Top Bar + Main + Right Rail ─── */}
       <div className="flex flex-1 flex-col overflow-hidden">
-        {/* ─── Top Bar ─── */}
-        <header className="flex h-14 shrink-0 items-center justify-between border-b border-neutral-200 bg-white px-5">
-          <div className="flex items-center gap-3">
-            {/* Account Switcher — driven by auth state */}
-            <AccountSwitcher />
+        {/* ─── Top Bar — all 8 sub-components ─── */}
+        <TopBar />
 
-            {/* Plan / Subscription Status — driven by auth state */}
-            <PlanBadge />
-          </div>
+        {/* ─── Main Content Area + Contextual Right Rail ─── */}
+        <div className="flex flex-1 overflow-hidden">
+          <main className="flex-1 overflow-y-auto bg-neutral-50/50 p-6">{children}</main>
 
-          <div className="flex items-center gap-2">
-            {/* Global Search */}
-            <button className="flex items-center gap-2 rounded-lg border border-neutral-200 px-3 py-1.5 text-sm text-neutral-400 transition-colors hover:bg-neutral-50 hover:text-neutral-600">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8" />
-                <path d="M21 21l-4.35-4.35" />
-              </svg>
-              Search…
-              <kbd className="ml-4 rounded border border-neutral-200 px-1.5 py-0.5 text-[10px] font-medium text-neutral-400">⌘K</kbd>
-            </button>
-
-            {/* Date Range */}
-            <button className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-sm text-neutral-600 transition-colors hover:bg-neutral-50">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" />
-                <line x1="16" y1="2" x2="16" y2="6" />
-                <line x1="8" y1="2" x2="8" y2="6" />
-                <line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
-              Last 30 days
-            </button>
-
-            {/* Help */}
-            <button className="flex h-8 w-8 items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-50 hover:text-neutral-600">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                <line x1="12" y1="17" x2="12.01" y2="17" />
-              </svg>
-            </button>
-
-            {/* Notifications */}
-            <button
-              onClick={() => setNotifOpen(!notifOpen)}
-              className="relative flex h-8 w-8 items-center justify-center rounded-lg text-neutral-400 transition-colors hover:bg-neutral-50 hover:text-neutral-600"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 8A6 6 0 1 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
-                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
-              </svg>
-              <span className="absolute right-1 top-1 flex h-2 w-2 rounded-full bg-red-500" />
-            </button>
-
-            {/* Profile Dropdown — Settings + Sign Out live here */}
-            <ProfileDropdown />
-          </div>
-        </header>
-
-        {/* ─── Main Content ─── */}
-        <main className="flex-1 overflow-y-auto bg-neutral-50/50 p-6">{children}</main>
-      </div>
-
-      {/* ─── Notification Drawer ─── */}
-      {notifOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end">
-          <div className="absolute inset-0 bg-black/20" onClick={() => setNotifOpen(false)} />
-          <div className="relative w-96 shrink-0 border-l border-neutral-200 bg-white shadow-xl">
-            <div className="flex h-14 items-center justify-between border-b border-neutral-200 px-5">
-              <h3 className="text-sm font-semibold text-neutral-900">Notifications</h3>
-              <button onClick={() => setNotifOpen(false)} className="text-neutral-400 hover:text-neutral-600">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
-              </button>
-            </div>
-            <div className="p-4">
-              {["Issues", "Announcements", "Suggestions", "Tickets", "Asset Sync", "Events", "Features", "Promotions"].map((tab) => (
-                <div key={tab} className="rounded-lg border border-neutral-100 bg-neutral-50 p-3 text-sm text-neutral-600 mb-2">
-                  No {tab.toLowerCase()} notifications
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* ─── Contextual Right Rail — visible on campaign creation/editing pages ─── */}
+          <ContextualRightRail visible={showRightRail} />
         </div>
-      )}
+      </div>
     </div>
-  );
-}
-
-/* ─── Account Switcher — driven by auth state ─── */
-function AccountSwitcher() {
-  const { user } = useCurrentUser();
-  return (
-    <button className="flex items-center gap-2 rounded-lg border border-neutral-200 px-3 py-1.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-        <circle cx="12" cy="7" r="4" />
-      </svg>
-      {user?.accountName || "My Account"}
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6" /></svg>
-    </button>
-  );
-}
-
-/* ─── Plan Badge — driven by auth state ─── */
-function PlanBadge() {
-  const { user } = useCurrentUser();
-  return (
-    <Link href="/ads/billing/plans" className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-3 py-1.5 text-xs font-medium text-neutral-500 transition-colors hover:bg-neutral-50 hover:text-neutral-700">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="1" y="4" width="22" height="16" rx="2" /><path d="M1 10h22" />
-      </svg>
-      {user?.plan?.label || "Free"}
-    </Link>
   );
 }
 
 /* ─── Sidebar Icons ─── */
 function SidebarIcon({ type, size = 16 }: { type: string; size?: number }) {
   const p: React.SVGProps<SVGSVGElement> = {
-    width: size,
-    height: size,
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: 1.5,
-    strokeLinecap: "round" as const,
-    strokeLinejoin: "round" as const,
+    width: size, height: size, viewBox: "0 0 24 24", fill: "none",
+    stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const,
   };
   switch (type) {
     case "home":

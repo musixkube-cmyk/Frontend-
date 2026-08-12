@@ -20,3 +20,23 @@ https://nextjs.org/telemetry
  GET / 200 in 140ms (compile: 8ms, render: 132ms)
  GET / 200 in 81ms (compile: 1927µs, render: 79ms)
  GET /ads/notifications 200 in 70ms (compile: 7ms, render: 63ms)
+ GET / 200 in 70ms (compile: 3ms, render: 67ms)
+ GET / 200 in 34ms (compile: 6ms, render: 29ms)
+✓ Compiled in 354ms
+✓ Compiled in 341ms
+✓ Compiled in 355ms
+✓ Compiled in 260ms
+✓ Compiled in 395ms
+✓ Compiled in 351ms
+ GET /ads/signin 200 in 454ms (compile: 382ms, render: 72ms)
+ GET /ads/signin 200 in 54ms (compile: 3ms, render: 52ms)
+ GET /ads/notifications 200 in 238ms (compile: 62ms, render: 176ms)
+ GET /ads/campaigns 200 in 447ms (compile: 429ms, render: 18ms)
+ GET /ads/agency 200 in 386ms (compile: 366ms, render: 19ms)
+ GET /ads/leads/crm 200 in 654ms (compile: 558ms, render: 96ms)
+ GET /ads/leads/direct-messages 200 in 894ms (compile: 872ms, render: 22ms)
+ GET /ads/leads 200 in 915ms (compile: 846ms, render: 70ms)
+ GET /ads/measure/performance 200 in 984ms (compile: 897ms, render: 87ms)
+ GET /ads/measure/cross-media 200 in 1220ms (compile: 1202ms, render: 18ms)
+✓ Compiled in 528ms
+✓ Compiled in 298ms

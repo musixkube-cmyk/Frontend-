@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
+
 /* ─── MetricCard ─── */
 interface MetricCardProps {
   label: string;
@@ -385,4 +387,333 @@ export function Button({ variant = "primary", className = "", ...props }: Button
     ghost: "text-neutral-600 hover:bg-neutral-100",
   };
   return <button className={`${base} ${styles[variant]} ${className}`} {...props} />;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Global Components — reusable across all list pages
+   ═══════════════════════════════════════════════════════════ */
+
+/* ─── Custom Columns ─── */
+interface CustomColumnsProps {
+  allColumns: { key: string; label: string }[];
+  visibleKeys: string[];
+  onChange: (keys: string[]) => void;
+}
+export function CustomColumns({ allColumns, visibleKeys, onChange }: CustomColumnsProps) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    if (open) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  const toggle = (key: string) => {
+    onChange(visibleKeys.includes(key) ? visibleKeys.filter((k) => k !== key) : [...visibleKeys, key]);
+  };
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-2.5 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-50"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" /><line x1="10" y1="3" x2="10" y2="21" />
+        </svg>
+        Columns
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-56 max-h-72 overflow-y-auto rounded-xl border border-neutral-200 bg-white p-2 shadow-lg z-50">
+          <p className="px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-neutral-400">Visible columns</p>
+          {allColumns.map((col) => (
+            <label key={col.key} className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-neutral-700 hover:bg-neutral-50 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={visibleKeys.includes(col.key)}
+                onChange={() => toggle(col.key)}
+                className="h-3.5 w-3.5 rounded border-neutral-300"
+              />
+              {col.label}
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Breakdown Selector ─── */
+interface BreakdownSelectorProps {
+  options: { key: string; label: string }[];
+  selected?: string;
+  onChange: (key: string) => void;
+}
+export function BreakdownSelector({ options, selected, onChange }: BreakdownSelectorProps) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    if (open) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  const activeLabel = options.find((o) => o.key === selected)?.label || "None";
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-2.5 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-50"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 3v18h18" /><path d="M7 16l4-4 4 4 5-5" />
+        </svg>
+        Breakdown: {activeLabel}
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-neutral-200 bg-white p-2 shadow-lg z-50">
+          <button
+            onClick={() => { onChange(""); setOpen(false); }}
+            className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors ${!selected ? "bg-neutral-100 font-medium text-neutral-900" : "text-neutral-600 hover:bg-neutral-50"}`}
+          >
+            None
+          </button>
+          {options.map((opt) => (
+            <button
+              key={opt.key}
+              onClick={() => { onChange(opt.key); setOpen(false); }}
+              className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors ${selected === opt.key ? "bg-neutral-100 font-medium text-neutral-900" : "text-neutral-600 hover:bg-neutral-50"}`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Export CSV/PDF ─── */
+interface ExportButtonProps {
+  onExportCSV?: () => void;
+  onExportPDF?: () => void;
+}
+export function ExportButton({ onExportCSV, onExportPDF }: ExportButtonProps) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    if (open) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-2.5 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-50"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        Export
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-40 rounded-xl border border-neutral-200 bg-white p-2 shadow-lg z-50">
+          <button
+            onClick={() => { onExportCSV?.(); setOpen(false); }}
+            className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+            Export CSV
+          </button>
+          <button
+            onClick={() => { onExportPDF?.(); setOpen(false); }}
+            className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+            Export PDF
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Actions Dropdown ─── */
+interface ActionsDropdownProps {
+  actions: { label: string; onClick?: () => void; variant?: "danger"; icon?: string }[];
+}
+export function ActionsDropdown({ actions }: ActionsDropdownProps) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    if (open) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  return (
+    <div className="relative inline-block" ref={ref}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1 rounded-lg border border-neutral-200 px-2.5 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-50"
+      >
+        Actions
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6" /></svg>
+      </button>
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-44 rounded-xl border border-neutral-200 bg-white p-1.5 shadow-lg z-50">
+          {actions.map((action, i) => (
+            <button
+              key={i}
+              onClick={() => { action.onClick?.(); setOpen(false); }}
+              className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm transition-colors ${
+                action.variant === "danger" ? "text-red-600 hover:bg-red-50" : "text-neutral-700 hover:bg-neutral-50"
+              }`}
+            >
+              {action.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Confirmation Dialog ─── */
+interface ConfirmDialogProps {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  title: string;
+  message: string;
+  confirmLabel?: string;
+  variant?: "danger" | "primary";
+}
+export function ConfirmDialog({ open, onClose, onConfirm, title, message, confirmLabel = "Confirm", variant = "primary" }: ConfirmDialogProps) {
+  if (!open) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/30" onClick={onClose} />
+      <div className="relative w-full max-w-sm rounded-xl border border-neutral-200 bg-white p-6 shadow-xl">
+        <h3 className="text-base font-semibold text-neutral-900">{title}</h3>
+        <p className="mt-2 text-sm text-neutral-600">{message}</p>
+        <div className="mt-5 flex items-center justify-end gap-3">
+          <button onClick={onClose} className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-50">Cancel</button>
+          <button
+            onClick={onConfirm}
+            className={`rounded-lg px-4 py-2 text-sm font-medium text-white ${variant === "danger" ? "bg-red-600 hover:bg-red-700" : "bg-neutral-900 hover:bg-neutral-800"}`}
+          >
+            {confirmLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Permissions / Access Gate ─── */
+interface PermissionsGateProps {
+  hasAccess: boolean;
+  fallback?: React.ReactNode;
+  children: React.ReactNode;
+}
+export function PermissionsGate({ hasAccess, fallback, children }: PermissionsGateProps) {
+  if (!hasAccess) {
+    return fallback ? <>{fallback}</> : (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-100">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-400">
+            <rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+        </div>
+        <h3 className="mt-4 text-sm font-semibold text-neutral-900">Access Denied</h3>
+        <p className="mt-1 max-w-sm text-sm text-neutral-500">You do not have permission to view this content. Contact your account admin to request access.</p>
+      </div>
+    );
+  }
+  return <>{children}</>;
+}
+
+/* ─── Date Range Filter (standalone component) ─── */
+interface DateRangeFilterProps {
+  value?: string;
+  onChange?: (value: string) => void;
+}
+export function DateRangeFilter({ value = "last-30", onChange }: DateRangeFilterProps) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    if (open) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open]);
+
+  const presets = [
+    { id: "today", label: "Today" }, { id: "yesterday", label: "Yesterday" },
+    { id: "last-7", label: "Last 7 days" }, { id: "last-14", label: "Last 14 days" },
+    { id: "last-30", label: "Last 30 days" }, { id: "last-90", label: "Last 90 days" },
+    { id: "this-month", label: "This month" }, { id: "last-month", label: "Last month" },
+  ];
+  const activeLabel = presets.find((p) => p.id === value)?.label || "Last 30 days";
+
+  return (
+    <div className="relative" ref={ref}>
+      <button onClick={() => setOpen(!open)} className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-2.5 py-1.5 text-xs font-medium text-neutral-600 transition-colors hover:bg-neutral-50">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+        </svg>
+        {activeLabel}
+      </button>
+      {open && (
+        <div className="absolute left-0 top-full mt-2 w-44 rounded-xl border border-neutral-200 bg-white p-2 shadow-lg z-50">
+          {presets.map((p) => (
+            <button key={p.id} onClick={() => { onChange?.(p.id); setOpen(false); }}
+              className={`flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors ${value === p.id ? "bg-neutral-100 font-medium text-neutral-900" : "text-neutral-600 hover:bg-neutral-50"}`}>
+              {p.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ─── Global Search (standalone component) ─── */
+interface GlobalSearchProps {
+  value?: string;
+  onChange?: (value: string) => void;
+  placeholder?: string;
+}
+export function GlobalSearch({ value = "", onChange, placeholder = "Search…" }: GlobalSearchProps) {
+  return (
+    <div className="relative min-w-[200px]">
+      <svg className="absolute left-2.5 top-1/2 -translate-y-1/2 text-neutral-400" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
+      </svg>
+      <input
+        value={value}
+        onChange={(e) => onChange?.(e.target.value)}
+        placeholder={placeholder}
+        className="w-full rounded-lg border border-neutral-200 py-1.5 pl-8 pr-3 text-xs text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-400 focus:outline-none"
+      />
+    </div>
+  );
 }
