@@ -133,14 +133,13 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
     <div className="flex h-screen bg-white text-neutral-900">
       {/* ─── Left Sidebar ─── */}
       <aside className="flex w-60 shrink-0 flex-col border-r border-neutral-200 bg-white">
-        {/* Logo / Ad Center */}
-        <div className="flex h-14 items-center gap-2 border-b border-neutral-200 px-5">
+        {/* Logo */}
+        <div className="flex h-14 items-center border-b border-neutral-200 px-5">
           <img
-            src="/musicosy-orange-logo.webp"
+            src="/logo-full-same-row.png"
             alt="Musicosy"
-            className="h-7 w-auto object-contain"
+            className="h-9 w-auto object-contain"
           />
-          <span className="text-sm font-semibold text-neutral-900">Ad Center</span>
         </div>
 
         {/* Global Create Campaign button */}
