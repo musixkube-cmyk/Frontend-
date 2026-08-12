@@ -1,44 +1,63 @@
 "use client";
 
+import { useState } from "react";
+import { PageHeader, MetricCard, FilterBar, DataTable, StatusBadge, TabBar, BulkActionToolbar, Button } from "@/components/ads/ui";
+
 export default function AnalyticsOverview() {
+  const [view, setView] = useState(0);
+
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Analytics Overview</h1>
-        <p className="mt-1 text-sm text-neutral-500">Diagnose performance across campaigns, ad groups, ads, and audiences.</p>
-      </div>
+      <PageHeader title="Analytics Overview" description="Diagnose performance across campaigns, ad groups, ads, and audiences." />
 
       {/* Breakdown selector */}
       <div className="mb-6 flex gap-2">
-        {["Campaign", "Ad Group", "Ad", "Audience", "Creative", "Delivery"].map((view, i) => (
-          <button key={view} className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${i === 0 ? "bg-neutral-900 text-white" : "border border-neutral-200 text-neutral-600 hover:bg-neutral-50"}`}>{view}</button>
+        {["Campaign", "Ad Group", "Ad", "Audience", "Creative", "Delivery"].map((v, i) => (
+          <button key={v} onClick={() => setView(i)} className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${i === view ? "bg-neutral-900 text-white" : "border border-neutral-200 text-neutral-600 hover:bg-neutral-50"}`}>{v}</button>
         ))}
       </div>
 
       {/* Metric scorecards */}
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-6">
-        {[
-          { label: "Spend", value: "$3,680" },
-          { label: "Impressions", value: "142K" },
-          { label: "Clicks", value: "1,824" },
-          { label: "CTR", value: "1.28%" },
-          { label: "CPA", value: "$19.78" },
-          { label: "ROAS", value: "3.4x" },
-        ].map((m) => (
-          <div key={m.label} className="rounded-xl border border-neutral-100 bg-white p-4">
-            <p className="text-xs font-medium uppercase tracking-wider text-neutral-400">{m.label}</p>
-            <p className="mt-1 text-xl font-bold text-neutral-900">{m.value}</p>
-          </div>
-        ))}
+        <MetricCard label="Spend" value="$3,680" delta="+12%" deltaType="positive" />
+        <MetricCard label="Impressions" value="142K" delta="+8%" deltaType="positive" />
+        <MetricCard label="Clicks" value="1,824" delta="+5%" deltaType="positive" />
+        <MetricCard label="CTR" value="1.28%" delta="+0.05%" deltaType="positive" />
+        <MetricCard label="CPA" value="$19.78" delta="-$1.20" deltaType="positive" />
+        <MetricCard label="ROAS" value="3.4x" delta="+0.2x" deltaType="positive" />
       </div>
 
-      {/* Chart placeholder */}
-      <div className="rounded-xl border border-neutral-100 bg-white p-6">
-        <h3 className="text-sm font-semibold text-neutral-900 mb-4">Performance trend</h3>
-        <div className="flex h-48 items-center justify-center text-sm text-neutral-400">
-          Chart renders here — connect to analytics API
+      {/* Date + column controls */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex gap-2">
+          <select className="rounded-lg border border-neutral-200 px-3 py-1.5 text-sm text-neutral-700"><option>Last 30 days</option><option>Last 7 days</option><option>Last 90 days</option></select>
+          <select className="rounded-lg border border-neutral-200 px-3 py-1.5 text-sm text-neutral-700"><option>Breakdown: None</option><option>By placement</option><option>By audience</option><option>By device</option><option>By time</option></select>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="secondary">Customize columns</Button>
+          <Button variant="secondary">Export</Button>
         </div>
       </div>
+
+      {/* Performance table */}
+      <DataTable
+        columns={[
+          { key: "name", label: "Campaign", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+          { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> },
+          { key: "spend", label: "Spend" },
+          { key: "impressions", label: "Impressions" },
+          { key: "clicks", label: "Clicks" },
+          { key: "ctr", label: "CTR" },
+          { key: "cpa", label: "CPA" },
+          { key: "conversions", label: "Conversions" },
+        ]}
+        data={[
+          { id: "1", name: "Summer Launch 2026", status: "active", spend: "$2,450", impressions: "89.2K", clicks: "1,230", ctr: "1.38%", cpa: "$13.17", conversions: "186" },
+          { id: "2", name: "Brand Awareness Push", status: "active", spend: "$890", impressions: "45K", clicks: "520", ctr: "1.16%", cpa: "$21.20", conversions: "42" },
+          { id: "3", name: "Catalog Carousel Test", status: "paused", spend: "$340", impressions: "7.8K", clicks: "89", ctr: "1.14%", cpa: "$24.50", conversions: "14" },
+        ]}
+        rowHref={(row) => `/ads/campaigns/${row.id}`}
+      />
     </div>
   );
 }

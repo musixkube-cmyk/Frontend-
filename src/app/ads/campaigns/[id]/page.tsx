@@ -1,91 +1,166 @@
 "use client";
 
 import Link from "next/link";
-import { use } from "react";
+import { use, useState } from "react";
+import { PageHeader, TabBar, MetricCard, StatusBadge, StatusToggle, DataTable, ActivityTimeline, Button, FormField } from "@/components/ads/ui";
+
+const adGroups = [
+  { id: "1", name: "Audio — Broad Audience", status: "active" as const, budget: "$50/day", spend: "$1,520", results: "842 clicks", optimization: "Maximize clicks" },
+  { id: "2", name: "Video — Retarget", status: "active" as const, budget: "$50/day", spend: "$930", results: "388 clicks", optimization: "Maximize conversions" },
+];
+
+const ads = [
+  { id: "1", name: "Summer Audio Spot", adGroup: "Audio — Broad Audience", status: "active" as const, type: "Audio", spend: "$820", results: "456 clicks" },
+  { id: "2", name: "Companion Banner", adGroup: "Audio — Broad Audience", status: "active" as const, type: "Image", spend: "$700", results: "386 clicks" },
+  { id: "3", name: "Video Retarget 15s", adGroup: "Video — Retarget", status: "active" as const, type: "Video", spend: "$930", results: "388 clicks" },
+];
+
+const activity = [
+  { id: "1", action: "created this campaign", user: "You", time: "Jul 15, 2026", detail: "Objective: Conversions" },
+  { id: "2", action: "increased daily budget", user: "You", time: "Jul 22, 2026", detail: "$80/day → $100/day" },
+  { id: "3", action: "added Ad Group", user: "You", time: "Jul 23, 2026", detail: "Video — Retarget" },
+  { id: "4", action: "published ad", user: "You", time: "Jul 24, 2026", detail: "Video Retarget 15s" },
+];
 
 export default function CampaignDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const [tab, setTab] = useState(0);
+  const [isActive, setIsActive] = useState(true);
+
   return (
     <div>
-      <div className="mb-6">
-        <div className="flex items-center gap-2 text-sm text-neutral-500">
-          <Link href="/ads/campaigns" className="hover:text-neutral-900">Campaigns</Link>
-          <span>/</span>
-          <span className="text-neutral-900">Campaign {id}</span>
+      <PageHeader
+        title="Summer Launch 2026"
+        description="Conversions · Daily budget $100"
+        breadcrumbs={[
+          { label: "Campaigns", href: "/ads/campaigns" },
+          { label: "Summer Launch 2026" },
+        ]}
+        actions={
+          <>
+            <StatusToggle active={isActive} onToggle={() => setIsActive(!isActive)} />
+            <Button variant="secondary">Duplicate</Button>
+            <Link href={`/ads/campaigns/${id}/edit`}><Button>Edit</Link></Link>
+          </>
+        }
+      />
+
+      <TabBar tabs={["Overview", "Ad Groups", "Ads", "Analytics", "Settings", "Activity"]} active={tab} onChange={setTab} />
+
+      {/* Overview */}
+      {tab === 0 && (
+        <div>
+          <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <MetricCard label="Spend" value="$2,450" />
+            <MetricCard label="Impressions" value="89.2K" />
+            <MetricCard label="Clicks" value="1,230" />
+            <MetricCard label="Conversions" value="186" />
+          </div>
+          <div className="mb-6 rounded-xl border border-neutral-100 bg-white p-6">
+            <h3 className="text-sm font-semibold text-neutral-900 mb-4">Performance trend</h3>
+            <div className="flex h-48 items-center justify-center text-sm text-neutral-400">Chart renders here — connect to analytics API</div>
+          </div>
+          <DataTable
+            columns={[
+              { key: "name", label: "Ad Group", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+              { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> },
+              { key: "budget", label: "Budget" },
+              { key: "spend", label: "Spend" },
+              { key: "results", label: "Results" },
+            ]}
+            data={adGroups}
+            rowHref={() => `/ads/campaigns/groups/1`}
+          />
         </div>
-        <div className="mt-3 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Summer Launch 2026</h1>
-            <div className="mt-2 flex items-center gap-3">
-              <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">Active</span>
-              <span className="text-sm text-neutral-500">Conversions · Daily budget $100</span>
+      )}
+
+      {/* Ad Groups */}
+      {tab === 1 && (
+        <div>
+          <div className="mb-4 flex justify-end">
+            <Button>Create Ad Group</Button>
+          </div>
+          <DataTable
+            columns={[
+              { key: "name", label: "Ad Group", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+              { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> },
+              { key: "optimization", label: "Optimization" },
+              { key: "budget", label: "Budget" },
+              { key: "spend", label: "Spend" },
+              { key: "results", label: "Results" },
+            ]}
+            data={adGroups}
+            rowHref={() => `/ads/campaigns/groups/1`}
+          />
+        </div>
+      )}
+
+      {/* Ads */}
+      {tab === 2 && (
+        <div>
+          <div className="mb-4 flex justify-end">
+            <Button>Create Ad</Button>
+          </div>
+          <DataTable
+            columns={[
+              { key: "name", label: "Ad", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+              { key: "adGroup", label: "Ad Group" },
+              { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> },
+              { key: "type", label: "Type" },
+              { key: "spend", label: "Spend" },
+              { key: "results", label: "Results" },
+            ]}
+            data={ads}
+          />
+        </div>
+      )}
+
+      {/* Analytics */}
+      {tab === 3 && (
+        <div>
+          <div className="mb-6 grid grid-cols-3 gap-4 lg:grid-cols-6">
+            <MetricCard label="Spend" value="$2,450" />
+            <MetricCard label="Impressions" value="89.2K" />
+            <MetricCard label="Clicks" value="1,230" />
+            <MetricCard label="CTR" value="1.38%" />
+            <MetricCard label="CPA" value="$13.17" />
+            <MetricCard label="ROAS" value="3.4x" />
+          </div>
+          <div className="rounded-xl border border-neutral-100 bg-white p-6">
+            <h3 className="text-sm font-semibold text-neutral-900 mb-4">Breakdown</h3>
+            <div className="flex gap-2 mb-4">
+              {["Placement", "Audience", "Device", "Time", "Creative"].map((b, i) => (
+                <button key={b} className={`rounded-lg px-3 py-1.5 text-sm font-medium ${i === 0 ? "bg-neutral-900 text-white" : "border border-neutral-200 text-neutral-600"}`}>{b}</button>
+              ))}
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50">Pause</button>
-            <button className="rounded-lg border border-neutral-200 px-4 py-2 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50">Duplicate</button>
-            <Link href={`/ads/campaigns/${id}/edit`} className="rounded-lg bg-neutral-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-neutral-800">Edit</Link>
+            <div className="flex h-48 items-center justify-center text-sm text-neutral-400">Breakdown chart</div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Tabs */}
-      <div className="mb-6 flex gap-1 border-b border-neutral-200">
-        {["Overview", "Ad Groups", "Ads", "Analytics", "Settings", "Activity"].map((tab, i) => (
-          <button key={tab} className={`px-4 py-2.5 text-sm font-medium transition-colors ${i === 0 ? "border-b-2 border-neutral-900 text-neutral-900" : "text-neutral-500 hover:text-neutral-700"}`}>
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      {/* KPI row */}
-      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {[
-          { label: "Spend", value: "$2,450" },
-          { label: "Impressions", value: "89.2K" },
-          { label: "Clicks", value: "1,230" },
-          { label: "Conversions", value: "186" },
-        ].map((kpi) => (
-          <div key={kpi.label} className="rounded-xl border border-neutral-100 bg-white p-5">
-            <p className="text-xs font-medium uppercase tracking-wider text-neutral-400">{kpi.label}</p>
-            <p className="mt-2 text-2xl font-bold text-neutral-900">{kpi.value}</p>
+      {/* Settings */}
+      {tab === 4 && (
+        <div className="rounded-xl border border-neutral-100 bg-white p-6">
+          <div className="grid gap-6 lg:grid-cols-2">
+            <FormField label="Campaign name"><input defaultValue="Summer Launch 2026" className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900 focus:border-neutral-400 focus:outline-none" /></FormField>
+            <FormField label="Objective"><select className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900"><option>Conversions</option><option>Awareness</option><option>Consideration</option></select></FormField>
+            <FormField label="Daily budget"><input defaultValue="100" type="number" className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900" /></FormField>
+            <FormField label="Delivery type"><select className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900"><option>Standard</option><option>Accelerated</option></select></FormField>
+            <FormField label="Special ad category"><select className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm text-neutral-900"><option>None</option><option>Housing</option><option>Credit</option></select></FormField>
           </div>
-        ))}
-      </div>
-
-      {/* Ad Groups table */}
-      <div className="rounded-xl border border-neutral-100 bg-white">
-        <div className="border-b border-neutral-100 px-5 py-4">
-          <h2 className="text-sm font-semibold text-neutral-900">Ad Groups</h2>
+          <div className="mt-6 flex justify-end gap-3">
+            <Button variant="secondary">Cancel</Button>
+            <Button>Save</Button>
+          </div>
         </div>
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-neutral-100 text-left text-xs font-medium uppercase tracking-wider text-neutral-400">
-              <th className="px-5 py-3">Ad Group</th>
-              <th className="px-5 py-3">Status</th>
-              <th className="px-5 py-3">Budget</th>
-              <th className="px-5 py-3">Spend</th>
-              <th className="px-5 py-3">Results</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-neutral-50 text-sm">
-              <td className="px-5 py-4 font-medium text-neutral-900">Audio — Broad Audience</td>
-              <td className="px-5 py-4"><span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">Active</span></td>
-              <td className="px-5 py-4 text-neutral-700">$50/day</td>
-              <td className="px-5 py-4 text-neutral-900">$1,520</td>
-              <td className="px-5 py-4 text-neutral-700">842 clicks</td>
-            </tr>
-            <tr className="text-sm">
-              <td className="px-5 py-4 font-medium text-neutral-900">Video — Retarget</td>
-              <td className="px-5 py-4"><span className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">Active</span></td>
-              <td className="px-5 py-4 text-neutral-700">$50/day</td>
-              <td className="px-5 py-4 text-neutral-900">$930</td>
-              <td className="px-5 py-4 text-neutral-700">388 clicks</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      )}
+
+      {/* Activity */}
+      {tab === 5 && (
+        <div className="rounded-xl border border-neutral-100 bg-white p-6">
+          <ActivityTimeline items={activity} />
+        </div>
+      )}
     </div>
   );
 }
