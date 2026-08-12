@@ -6,55 +6,80 @@ import { useState, useMemo } from "react";
 import { ProfileDropdown, SidebarProfile } from "@/components/ads/profile-dropdown";
 import { useCurrentUser } from "@/hooks/use-auth";
 
-/* ─── Collapsible sidebar navigation tree ─── */
+/* ─── Collapsible sidebar navigation tree — matches spec exactly ─── */
 const navTree = [
   {
-    label: "Overview",
+    label: "Dashboard",
     icon: "home",
     children: [
-      { label: "Dashboard", href: "/ads", icon: "dashboard" },
-      { label: "All Campaigns", href: "/ads/campaigns", icon: "campaigns" },
+      { label: "Dashboard", href: "/ads/dashboard", icon: "dashboard" },
       { label: "GMV Max", href: "/ads/gmv-max", icon: "chart" },
+    ],
+  },
+  {
+    label: "Ads Manager",
+    icon: "campaigns",
+    children: [
+      { label: "Campaigns", href: "/ads/ads-manager/campaigns", icon: "campaigns" },
+      { label: "Ad Groups", href: "/ads/ads-manager/ad-groups", icon: "layers" },
+      { label: "Ads", href: "/ads/ads-manager/ads", icon: "ad" },
+      { label: "Monitoring", href: "/ads/ads-manager/monitor", icon: "chart" },
+      { label: "Optimization", href: "/ads/ads-manager/optimize", icon: "zap" },
+      { label: "Create Campaign", href: "/ads/ads-manager/campaigns/create", icon: "plus-circle", primary: true },
+    ],
+  },
+  {
+    label: "Management Tools",
+    icon: "zap",
+    children: [
+      { label: "Placement & Inventory", href: "/ads/inventory", icon: "layout" },
+      { label: "Catalog Manager", href: "/ads/catalog", icon: "catalog" },
+      { label: "Events Manager", href: "/ads/events", icon: "calendar" },
+      { label: "Automated Rules", href: "/ads/automated-rules", icon: "zap" },
+      { label: "Comments Manager", href: "/ads/comments-manager", icon: "message-square" },
+      { label: "MMM Data Request", href: "/ads/mmm-data-request", icon: "report" },
       { label: "Notification Center", href: "/ads/notifications", icon: "bell" },
     ],
   },
   {
-    label: "Campaigns",
-    icon: "campaigns",
+    label: "Audiences",
+    icon: "users",
     children: [
-      { label: "All Campaigns", href: "/ads/campaigns", icon: "campaigns" },
-      { label: "Ad Groups", href: "/ads/campaigns/groups", icon: "layers" },
-      { label: "Ads", href: "/ads/campaigns/ads", icon: "ad" },
-      { label: "Drafts", href: "/ads/campaigns/drafts", icon: "draft" },
-      { label: "Create Campaign", href: "/ads/campaigns/create", icon: "plus-circle", primary: true },
+      { label: "Audience List", href: "/ads/audiences", icon: "users" },
+      { label: "Create Audience", href: "/ads/audiences/create", icon: "plus-circle", primary: true },
+      { label: "Demographic Targeting", href: "/ads/audiences/demographic", icon: "users" },
+      { label: "Location Targeting", href: "/ads/audiences/location", icon: "target" },
+      { label: "Music Behavior", href: "/ads/audiences/music-behavior", icon: "chart" },
+      { label: "Artist Affinity", href: "/ads/audiences/artist-affinity", icon: "sparkles" },
     ],
   },
   {
-    label: "Assets",
-    icon: "folder",
+    label: "Creatives",
+    icon: "palette",
     children: [
-      { label: "Creative Library", href: "/ads/assets/creative-library", icon: "folder" },
-      { label: "Creative Studio", href: "/ads/assets/creative-studio", icon: "palette" },
-      { label: "Creator Partnerships", href: "/ads/assets/creator-partnerships", icon: "users" },
-      { label: "Audiences", href: "/ads/assets/audiences", icon: "users" },
-      { label: "Catalog Manager", href: "/ads/assets/catalogs", icon: "catalog" },
-      { label: "Placements & Inventory", href: "/ads/inventory", icon: "layout" },
+      { label: "Create an Ad", href: "/ads/creatives/create", icon: "plus-circle", primary: true },
+      { label: "Creative Library", href: "/ads/creatives/library", icon: "folder" },
+      { label: "Audio Upload", href: "/ads/creatives/audio", icon: "play-circle" },
+      { label: "Companion Images", href: "/ads/creatives/companion", icon: "layout" },
+      { label: "Logo Management", href: "/ads/creatives/logo", icon: "folder" },
+      { label: "CTA Selector", href: "/ads/creatives/cta", icon: "link" },
+      { label: "Ad Preview", href: "/ads/creatives/preview", icon: "ad" },
+      { label: "AI Creative Gen", href: "/ads/creatives/ai", icon: "sparkles" },
+      { label: "Creator Partnerships", href: "/ads/creatives/partnerships", icon: "users" },
     ],
   },
   {
-    label: "Measure",
+    label: "Analytics",
     icon: "chart",
     children: [
-      { label: "Analytics Overview", href: "/ads/measure/analytics", icon: "chart" },
-      { label: "Performance Metrics", href: "/ads/measure/performance", icon: "chart" },
-      { label: "Audience Insights", href: "/ads/measure/audience", icon: "insight" },
-      { label: "Media Insights", href: "/ads/measure/media-insights", icon: "play-circle" },
-      { label: "Attribution", href: "/ads/measure/attribution", icon: "path" },
-      { label: "Reports", href: "/ads/measure/reports", icon: "report" },
-      { label: "Experiments & Studies", href: "/ads/measure/experiments", icon: "flask" },
-      { label: "Cross-Media Measurement", href: "/ads/measure/cross-media", icon: "layout" },
-      { label: "Third-Party Measurement", href: "/ads/measure/third-party-measurement", icon: "shield" },
-      { label: "Metrics Glossary", href: "/ads/measure/metrics-glossary", icon: "file-text" },
+      { label: "Analytics Dashboard", href: "/ads/analytics", icon: "chart" },
+      { label: "Audience Insights", href: "/ads/analytics/audience", icon: "insight" },
+      { label: "Attribution", href: "/ads/analytics/attribution", icon: "path" },
+      { label: "Experiments", href: "/ads/analytics/experiments", icon: "flask" },
+      { label: "Cross-Media", href: "/ads/analytics/cross-media", icon: "layout" },
+      { label: "Third-Party", href: "/ads/analytics/third-party", icon: "shield" },
+      { label: "Metrics Glossary", href: "/ads/analytics/metrics-glossary", icon: "file-text" },
+      { label: "Reports", href: "/ads/analytics/reports", icon: "report" },
     ],
   },
   {
@@ -66,22 +91,20 @@ const navTree = [
       { label: "Website Forms", href: "/ads/leads/website-forms", icon: "file-text" },
       { label: "Direct Messages", href: "/ads/leads/direct-messages", icon: "message" },
       { label: "Inbox", href: "/ads/leads/inbox", icon: "inbox" },
-      { label: "Messaging Settings", href: "/ads/leads/messaging", icon: "settings" },
-      { label: "CRM Integrations", href: "/ads/leads/crm", icon: "link" },
+      { label: "Message Settings", href: "/ads/leads/messaging", icon: "settings" },
+      { label: "CRM Integration", href: "/ads/leads/crm", icon: "link" },
     ],
   },
   {
-    label: "Manage",
-    icon: "zap",
+    label: "Tools & Resources",
+    icon: "puzzle",
     children: [
-      { label: "Events Manager", href: "/ads/manage/events", icon: "calendar" },
-      { label: "Automated Rules", href: "/ads/manage/rules", icon: "zap" },
-      { label: "Comments Manager", href: "/ads/manage/comments", icon: "message-square" },
-      { label: "Brand Safety", href: "/ads/manage/brand-safety", icon: "shield" },
-      { label: "MMM Data Requests", href: "/ads/manage/mmm", icon: "report" },
-      { label: "Planning Tools", href: "/ads/manage/planning", icon: "target" },
-      { label: "Integrations", href: "/ads/manage/integrations", icon: "puzzle" },
-      { label: "AI Skills & MCP", href: "/ads/manage/ai-skills", icon: "sparkles" },
+      { label: "Keyword Planner", href: "/ads/tools/keyword-planner", icon: "target" },
+      { label: "Negative Keywords", href: "/ads/tools/negative-keywords", icon: "target" },
+      { label: "Video Editor", href: "/ads/tools/video-editor", icon: "play-circle" },
+      { label: "Integrations", href: "/ads/tools/integrations", icon: "puzzle" },
+      { label: "MCP Server", href: "/ads/tools/mcp", icon: "code" },
+      { label: "AI Skills", href: "/ads/ai/skills", icon: "sparkles" },
     ],
   },
   {
@@ -89,7 +112,7 @@ const navTree = [
     icon: "building",
     children: [
       { label: "Agency Dashboard", href: "/ads/agency", icon: "dashboard" },
-      { label: "Clients", href: "/ads/agency/clients", icon: "users" },
+      { label: "Client Management", href: "/ads/agency/clients", icon: "users" },
       { label: "Cross-Client Reporting", href: "/ads/agency/cross-client", icon: "chart" },
       { label: "Agency Billing", href: "/ads/agency/billing", icon: "credit-card" },
       { label: "Agency Team", href: "/ads/agency/team", icon: "users-cog" },
@@ -138,7 +161,7 @@ export default function AdsLayout({ children }: { children: React.ReactNode }) {
         {/* Global Create Campaign button */}
         <div className="px-4 pt-4 pb-2">
           <Link
-            href="/ads/campaigns/create"
+            href="/ads/ads-manager/campaigns/create"
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-neutral-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

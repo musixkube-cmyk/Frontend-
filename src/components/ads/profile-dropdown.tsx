@@ -19,6 +19,8 @@ export function ProfileDropdown() {
   const [open, setOpen] = useState(false);
   const [billingOpen, setBillingOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [policiesOpen, setPoliciesOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { user, signOut, signingOut } = useAuth();
 
@@ -113,7 +115,41 @@ export function ProfileDropdown() {
             </button>
           </div>
 
-          {/* ─── Settings section (expandable) ─── */}
+          {/* ─── Account Management (expandable) ─── */}
+          <div className="border-b border-neutral-100">
+            <button
+              onClick={() => setAccountOpen(!accountOpen)}
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="4" y="2" width="16" height="20" rx="2" />
+                <path d="M9 22v-4h6v4" />
+                <path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01" />
+              </svg>
+              <span className="flex-1 text-left">Account Management</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-neutral-400 transition-transform duration-200 ${accountOpen ? "rotate-90" : ""}`}>
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+            {accountOpen && (
+              <div className="px-2 pb-2 space-y-0.5">
+                <DropdownLink href="/ads/account" label="My Account" onClick={close} />
+                <DropdownLink href="/ads/account/settings" label="Account Settings" onClick={close} />
+                <DropdownLink href="/ads/account/profile" label="Profile Information" onClick={close} />
+                <DropdownLink href="/ads/account/documents" label="Documents & Legal" onClick={close} />
+                <DropdownLink href="/ads/account/health" label="Account Health" onClick={close} />
+                <DropdownLink href="/ads/account/customer-review" label="Customer Review" onClick={close} />
+                <DropdownLink href="/ads/account/brand-safety" label="Brand Safety Hub" onClick={close} />
+                <DropdownLink href="/ads/account/audience-controls" label="Audience Controls" onClick={close} />
+                <DropdownLink href="/ads/account/verification" label="Business Verification" onClick={close} />
+                <DropdownLink href="/ads/account/team" label="Team & Members" onClick={close} />
+                <DropdownLink href="/ads/account/tiers" label="Account Tier System" onClick={close} />
+                <DropdownLink href="/ads/account/notifications" label="Notification Preferences" onClick={close} />
+              </div>
+            )}
+          </div>
+
+          {/* ─── Settings (expandable) ─── */}
           <div className="border-b border-neutral-100">
             <button
               onClick={() => setSettingsOpen(!settingsOpen)}
@@ -130,16 +166,35 @@ export function ProfileDropdown() {
             </button>
             {settingsOpen && (
               <div className="px-2 pb-2 space-y-0.5">
-                <DropdownLink href="/ads/settings/account" label="Account & Business" onClick={close} />
-                <DropdownLink href="/ads/settings/tiers" label="Plan & Tier Status" onClick={close} />
-                <DropdownLink href="/ads/settings/team" label="Team & Permissions" onClick={close} />
-                <DropdownLink href="/ads/settings/verification" label="Verification" onClick={close} />
-                <DropdownLink href="/ads/settings/customer-review" label="Customer Review" onClick={close} />
-                <DropdownLink href="/ads/settings/documents" label="Documents" onClick={close} />
-                <DropdownLink href="/ads/settings/targeting-defaults" label="Targeting Defaults" onClick={close} />
-                <DropdownLink href="/ads/settings/notifications" label="Notification Preferences" onClick={close} />
+                <DropdownLink href="/ads/settings" label="Ad Settings" onClick={close} />
                 <DropdownLink href="/ads/settings/api" label="API Access" onClick={close} />
-                <DropdownLink href="/ads/settings/policies-security" label="Policies & Security" onClick={close} />
+                <DropdownLink href="/ads/settings/brand-safety" label="Brand Safety" onClick={close} />
+                <DropdownLink href="/ads/settings/notifications" label="Notification Settings" onClick={close} />
+                <DropdownLink href="/ads/settings/targeting-defaults" label="Targeting Defaults" onClick={close} />
+              </div>
+            )}
+          </div>
+
+          {/* ─── Policies & Security (expandable) ─── */}
+          <div className="border-b border-neutral-100">
+            <button
+              onClick={() => setPoliciesOpen(!policiesOpen)}
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <span className="flex-1 text-left">Policies & Security</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-neutral-400 transition-transform duration-200 ${policiesOpen ? "rotate-90" : ""}`}>
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+            {policiesOpen && (
+              <div className="px-2 pb-2 space-y-0.5">
+                <DropdownLink href="/ads/policies-security" label="Advertising Policies" onClick={close} />
+                <DropdownLink href="/ads/policies-security/privacy" label="Privacy Practices" onClick={close} />
+                <DropdownLink href="/ads/policies-security/security" label="Account Security" onClick={close} />
+                <DropdownLink href="/ads/policies-security/brand-safety" label="Brand Safety" onClick={close} />
               </div>
             )}
           </div>
