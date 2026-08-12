@@ -85,22 +85,6 @@ const navTree = [
     ],
   },
   {
-    label: "Billing",
-    icon: "credit-card",
-    children: [
-      { label: "Billing Overview", href: "/ads/billing", icon: "credit-card" },
-      { label: "Ads Plans & Subscriptions", href: "/ads/billing/plans", icon: "wallet" },
-      { label: "Payment Preferences", href: "/ads/billing/payment-preferences", icon: "settings" },
-      { label: "Payment Methods", href: "/ads/billing/payment-methods", icon: "wallet" },
-      { label: "Billing Profile", href: "/ads/billing/profile", icon: "building" },
-      { label: "Invoices", href: "/ads/billing/invoices", icon: "receipt" },
-      { label: "Transactions", href: "/ads/billing/transactions", icon: "arrow-left-right" },
-      { label: "Taxes", href: "/ads/billing/taxes", icon: "percent" },
-      { label: "Credits, Rebates & Promotions", href: "/ads/billing/credits", icon: "gift" },
-      { label: "Billing Support", href: "/ads/billing/support", icon: "help" },
-    ],
-  },
-  {
     label: "Agency",
     icon: "building",
     children: [

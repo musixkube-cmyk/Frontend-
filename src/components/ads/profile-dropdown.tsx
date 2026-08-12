@@ -8,14 +8,17 @@ import { useAuth } from "@/hooks/use-auth";
  * ProfileDropdown — modern avatar dropdown with:
  *   - User name, email, role
  *   - Account switcher
- *   - Settings link
+ *   - Settings (with sub-links)
+ *   - Billing & Subscription (with sub-links)
  *   - Sign Out action
  *
- * This is the ONLY place Settings and Sign Out appear in the UI.
+ * This is the ONLY place Settings, Billing, and Sign Out appear in the UI.
  * Triggered by clicking the avatar circle in the top bar.
  */
 export function ProfileDropdown() {
   const [open, setOpen] = useState(false);
+  const [billingOpen, setBillingOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { user, signOut, signingOut } = useAuth();
 
@@ -48,6 +51,8 @@ export function ProfileDropdown() {
         .toUpperCase()
     : "…";
 
+  const close = () => setOpen(false);
+
   return (
     <div className="relative" ref={ref}>
       {/* Avatar trigger */}
@@ -62,7 +67,7 @@ export function ProfileDropdown() {
 
       {/* Dropdown panel */}
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-72 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-lg z-50">
+        <div className="absolute right-0 top-full mt-2 w-80 overflow-hidden rounded-xl border border-neutral-200 bg-white shadow-lg z-50 max-h-[85vh] overflow-y-auto">
           {/* User info header */}
           <div className="px-4 py-3 border-b border-neutral-100">
             <div className="flex items-center gap-3">
@@ -85,7 +90,7 @@ export function ProfileDropdown() {
               {user?.plan && (
                 <Link
                   href="/ads/billing/plans"
-                  onClick={() => setOpen(false)}
+                  onClick={close}
                   className="inline-flex items-center rounded-full bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-600 transition-colors hover:bg-neutral-200"
                 >
                   {user.plan.label}
@@ -108,52 +113,73 @@ export function ProfileDropdown() {
             </button>
           </div>
 
-          {/* Navigation links */}
-          <div className="px-2 py-1.5">
-            <Link
-              href="/ads/settings/account"
-              onClick={() => setOpen(false)}
-              className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-neutral-700 transition-colors hover:bg-neutral-50"
+          {/* ─── Settings section (expandable) ─── */}
+          <div className="border-b border-neutral-100">
+            <button
+              onClick={() => setSettingsOpen(!settingsOpen)}
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="3" />
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
               </svg>
-              Settings
-            </Link>
-
-            <Link
-              href="/ads/settings/team"
-              onClick={() => setOpen(false)}
-              className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-neutral-700 transition-colors hover:bg-neutral-50"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                <circle cx="9" cy="7" r="4" />
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              <span className="flex-1 text-left">Settings</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-neutral-400 transition-transform duration-200 ${settingsOpen ? "rotate-90" : ""}`}>
+                <path d="M9 18l6-6-6-6" />
               </svg>
-              Team & Permissions
-            </Link>
+            </button>
+            {settingsOpen && (
+              <div className="px-2 pb-2 space-y-0.5">
+                <DropdownLink href="/ads/settings/account" label="Account & Business" onClick={close} />
+                <DropdownLink href="/ads/settings/tiers" label="Plan & Tier Status" onClick={close} />
+                <DropdownLink href="/ads/settings/team" label="Team & Permissions" onClick={close} />
+                <DropdownLink href="/ads/settings/verification" label="Verification" onClick={close} />
+                <DropdownLink href="/ads/settings/customer-review" label="Customer Review" onClick={close} />
+                <DropdownLink href="/ads/settings/documents" label="Documents" onClick={close} />
+                <DropdownLink href="/ads/settings/targeting-defaults" label="Targeting Defaults" onClick={close} />
+                <DropdownLink href="/ads/settings/notifications" label="Notification Preferences" onClick={close} />
+                <DropdownLink href="/ads/settings/api" label="API Access" onClick={close} />
+                <DropdownLink href="/ads/settings/policies-security" label="Policies & Security" onClick={close} />
+              </div>
+            )}
+          </div>
 
-            <Link
-              href="/ads/billing/plans"
-              onClick={() => setOpen(false)}
-              className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-sm text-neutral-700 transition-colors hover:bg-neutral-50"
+          {/* ─── Billing & Subscription section (expandable) ─── */}
+          <div className="border-b border-neutral-100">
+            <button
+              onClick={() => setBillingOpen(!billingOpen)}
+              className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-neutral-700 transition-colors hover:bg-neutral-50"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="1" y="4" width="22" height="16" rx="2" />
                 <path d="M1 10h22" />
               </svg>
-              Subscription & Billing
-            </Link>
+              <span className="flex-1 text-left">Billing & Subscription</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`text-neutral-400 transition-transform duration-200 ${billingOpen ? "rotate-90" : ""}`}>
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+            {billingOpen && (
+              <div className="px-2 pb-2 space-y-0.5">
+                <DropdownLink href="/ads/billing" label="Billing Overview" onClick={close} />
+                <DropdownLink href="/ads/billing/plans" label="Plans & Subscriptions" onClick={close} />
+                <DropdownLink href="/ads/billing/payment-preferences" label="Payment Preferences" onClick={close} />
+                <DropdownLink href="/ads/billing/payment-methods" label="Payment Methods" onClick={close} />
+                <DropdownLink href="/ads/billing/profile" label="Billing Profile" onClick={close} />
+                <DropdownLink href="/ads/billing/invoices" label="Invoices" onClick={close} />
+                <DropdownLink href="/ads/billing/transactions" label="Transactions" onClick={close} />
+                <DropdownLink href="/ads/billing/taxes" label="Taxes" onClick={close} />
+                <DropdownLink href="/ads/billing/credits" label="Credits & Promotions" onClick={close} />
+                <DropdownLink href="/ads/billing/support" label="Billing Support" onClick={close} />
+              </div>
+            )}
           </div>
 
           {/* Sign Out */}
-          <div className="border-t border-neutral-100 px-2 py-1.5">
+          <div className="px-2 py-1.5">
             <button
               onClick={() => {
-                setOpen(false);
+                close();
                 signOut();
               }}
               disabled={signingOut}
@@ -173,10 +199,23 @@ export function ProfileDropdown() {
   );
 }
 
+/* ─── Small helper for dropdown links ─── */
+function DropdownLink({ href, label, onClick }: { href: string; label: string; onClick: () => void }) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="flex w-full items-center gap-2 rounded-lg px-3 py-1.5 pl-6 text-[13px] text-neutral-600 transition-colors hover:bg-neutral-50 hover:text-neutral-900"
+    >
+      {label}
+    </Link>
+  );
+}
+
 /**
  * SidebarProfile — compact user display at bottom of sidebar.
- * Clicking it also opens the dropdown (via ProfileDropdown in top bar).
- * This just shows the user info; the actual dropdown is in the top bar.
+ * Shows the user info; the actual dropdown with Settings/Billing/SignOut
+ * is in the top bar ProfileDropdown.
  */
 export function SidebarProfile() {
   const { user } = useAuth();
