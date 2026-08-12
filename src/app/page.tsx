@@ -251,7 +251,7 @@ export default function Home() {
             <img
               src="/musicosy-orange-logo.webp"
               alt="Musicosy"
-              className="h-24 w-auto object-contain"
+              className="h-36 w-auto object-contain"
             />
             <p className="mt-1 text-xs text-ink-muted">&copy; {new Date().getFullYear()} Musicosy</p>
           </div>
