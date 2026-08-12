@@ -1,75 +1,66 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { PageHeader, FilterBar, DataTable, StatusBadge, BulkActionToolbar, Button } from "@/components/ads/ui";
 
-export default function Page() {
+const audiences = [
+  { id: "1", name: "Broad US 18-55", type: "Demographic", size: "~42M", status: "ready" as const, lookalike: "1% → ~2.1M", updated: "Aug 10, 2026" },
+  { id: "2", name: "Custom — Past Purchasers", type: "Custom", size: "~12K", status: "ready" as const, lookalike: "1% → ~520K", updated: "Aug 8, 2026" },
+  { id: "3", name: "Lookalike — Purchasers 1%", type: "Lookalike", size: "~2.1M", status: "ready" as const, lookalike: "—", updated: "Aug 5, 2026" },
+  { id: "4", name: "Artist Affinity — EDM", type: "Artist Affinity", size: "~890K", status: "ready" as const, lookalike: "1% → ~4.2M", updated: "Aug 1, 2026" },
+  { id: "5", name: "Music Behavior — Streamers", type: "Music Behavior", size: "~18M", status: "ready" as const, lookalike: "—", updated: "Jul 30, 2026" },
+  { id: "6", name: "Exclude — Employees", type: "Exclusion", size: "~450", status: "ready" as const, lookalike: "—", updated: "Jul 28, 2026" },
+];
+
+export default function AudiencesPage() {
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState("");
+  const toggleSelect = (id: string) => { const n = new Set(selected); n.has(id) ? n.delete(id) : n.add(id); setSelected(n); };
+  const toggleAll = () => { setSelected(selected.size === audiences.length ? new Set() : new Set(audiences.map(a => a.id))); };
+
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Audiences</h1>
-          <p className="mt-1 text-sm text-neutral-500">Create and manage reusable audiences — custom, lookalike, artist affinity, demographics.</p>
-        </div>
-                <Link
-          href="/ads/audiences/create"
-          className="flex h-9 items-center gap-2 rounded-lg bg-neutral-900 px-4 text-sm font-medium text-white transition-colors hover:bg-neutral-800"
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14" /></svg>
-          Create Audience
-        </Link>
-      </div>
+      <PageHeader
+        title="Audiences"
+        description="Create and manage reusable audiences — custom, lookalike, artist affinity, demographics."
+        actions={<Link href="/ads/audiences/create"><Button>Create Audience</Button></Link>}
+      />
 
-      <div className="rounded-xl border border-neutral-100 bg-white">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-neutral-100 text-left text-xs font-medium uppercase tracking-wider text-neutral-400">
-              <th className="px-4 py-3">Audience</th>
-              <th className="px-4 py-3">Type</th>
-              <th className="px-4 py-3">Size</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Last updated</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Broad US 18-55</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Demographic</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">~42M</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Ready</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 10, 2026</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Custom — Past Purchasers</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Custom</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">~12K</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Ready</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 8, 2026</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Lookalike — Purchasers 1%</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Lookalike</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">~2.1M</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Ready</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 5, 2026</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Artist Affinity — EDM</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Artist Affinity</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">~890K</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Ready</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Aug 1, 2026</td>
-            </tr>
-            <tr className="border-b border-neutral-50">
-                <td className="px-4 py-3 text-sm text-neutral-700">Exclude — Employees</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Exclusion</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">~450</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Ready</td>
-                <td className="px-4 py-3 text-sm text-neutral-700">Jul 30, 2026</td>
-            </tr>
+      <FilterBar
+        searchPlaceholder="Search audiences…"
+        onSearch={setSearch}
+        filters={[
+          { label: "Type", options: ["Custom", "Lookalike", "Demographic", "Artist Affinity", "Music Behavior", "Exclusion"] },
+          { label: "Status", options: ["Ready", "Building", "Expired"] },
+        ]}
+      />
 
-          </tbody>
-        </table>
-      </div>
+      <BulkActionToolbar
+        selectedCount={selected.size}
+        actions={[
+          { label: "Create lookalike", onClick: () => {} },
+          { label: "Export", onClick: () => {} },
+          { label: "Delete", onClick: () => {}, variant: "danger" },
+        ]}
+      />
+
+      <DataTable
+        columns={[
+          { key: "name", label: "Audience", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+          { key: "type", label: "Type" },
+          { key: "size", label: "Size", render: (v: string) => <span className="font-medium text-neutral-900">{v}</span> },
+          { key: "status", label: "Status", render: (v: string) => <StatusBadge status={v as any} /> },
+          { key: "lookalike", label: "Lookalike" },
+          { key: "updated", label: "Updated", render: (v: string) => <span className="text-neutral-400">{v}</span> },
+        ]}
+        data={audiences}
+        selectable
+        selected={selected}
+        onToggleSelect={toggleSelect}
+        onToggleAll={toggleAll}
+        rowHref={(row) => `/ads/audiences/${row.id}`}
+      />
     </div>
   );
 }
