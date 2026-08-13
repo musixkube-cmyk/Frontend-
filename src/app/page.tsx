@@ -69,7 +69,9 @@ export default function Home() {
 
       if (lag.current) {
         lag.current.currentTime = 0;
-        lag.current.play();
+        lag.current.play().catch((error) => {
+          console.warn("Failed to play video:", error);
+        });
       }
       // CSS transition handles the opacity crossfade
       setShowA(!showA);
